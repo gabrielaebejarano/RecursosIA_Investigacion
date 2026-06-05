@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas de IA para la Investigación Académica</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal:        #0F6E56;
+    --teal-mid:    #1A9070;
+    --teal-light:  #E1F5EE;
+    --teal-soft:   #C8EAE0;
+    --purple:      #534AB7;
+    --purple-light:#EEEDFE;
+    --coral:       #C0442A;
+    --coral-light: #FAECE7;
+    --amber:       #A0620E;
+    --amber-light: #FEF3DC;
+    --gray-dark:   #1E1E1E;
+    --gray:        #444441;
+    --gray-mid:    #6B7280;
+    --gray-light:  #F4F4F2;
+    --gray-border: #E5E7EB;
+    --white:       #FFFFFF;
+    --bg:          #F8F9FA;
+    --step0:       #5C6BC0;
+    --step1:       #0F6E56;
+    --step2:       #1A9070;
+    --step3:       #2EA882;
+    --step4:       #26A69A;
+    --step5:       #534AB7;
+    --step6:       #7B5EA7;
+    --step7:       #C0442A;
+    --step8:       #E67E22;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--gray);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  .site-header {
+    background: var(--teal);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: #A0D8C8;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: 1.1rem;
+  }
+  .site-header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    max-width: 700px;
+    margin: 0 auto 0.75rem;
+  }
+  .site-header h1 span { color: #A0D8C8; }
+  .site-header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto 1.5rem;
+    font-weight: 300;
+  }
+  .header-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.82rem;
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    font-style: italic;
+  }
+   .repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .repo-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+
+  /* ── Legend ─────────────────────────────────────────────── */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 1rem 2rem;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    font-size: 0.82rem;
+    color: var(--gray-mid);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-free   { background: var(--teal); }
+  .dot-paid   { background: var(--coral); }
+  .dot-click  { background: var(--purple); }
+
+  /* ── Main Layout ─────────────────────────────────────────── */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 3rem;
+  }
+
+  /* ── Stage Block ─────────────────────────────────────────── */
+  .stage {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .stage:nth-child(1)  { animation-delay: 0.05s; }
+  .stage:nth-child(2)  { animation-delay: 0.10s; }
+  .stage:nth-child(3)  { animation-delay: 0.15s; }
+  .stage:nth-child(4)  { animation-delay: 0.20s; }
+  .stage:nth-child(5)  { animation-delay: 0.25s; }
+  .stage:nth-child(6)  { animation-delay: 0.30s; }
+  .stage:nth-child(7)  { animation-delay: 0.35s; }
+  .stage:nth-child(8)  { animation-delay: 0.40s; }
+  .stage:nth-child(9)  { animation-delay: 0.45s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+  }
+  .stage-number {
+    font-family: 'Inter', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--step-color);
+    line-height: 1;
+    min-width: 2rem;
+    flex-shrink: 0;
+  }
+  .stage-meta {}
+  .stage-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--step-color);
+    line-height: 1.2;
+  }
+  .stage-desc {
+    font-size: 0.88rem;
+    color: var(--gray-mid);
+    margin-top: 0.2rem;
+    font-weight: 300;
+  }
+
+  /* ── Tool Grid ───────────────────────────────────────────── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* ── Tool Card ───────────────────────────────────────────── */
+  .tool-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-border);
+    border-radius: 0.85rem;
+    padding: 1rem 0.9rem;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    user-select: none;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--step-color);
+    border-radius: 0.85rem 0.85rem 0 0;
+  }
+  .tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    border-color: var(--step-color);
+  }
+  .tool-card.active {
+    border-color: var(--step-color);
+    background: var(--card-bg, #F8FFF8);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--step-color) 18%, transparent);
+  }
+
+  .tool-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .tool-icon-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+  }
+  .tool-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--gray-dark);
+    line-height: 1.25;
+    margin-bottom: 0.25rem;
+  }
+  .tool-url {
+    font-size: 0.72rem;
+    color: var(--gray-mid);
+    font-style: italic;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .tool-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.18rem 0.55rem;
+    border-radius: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .status-free {
+    background: var(--teal-light);
+    color: var(--teal);
+  }
+  .status-paid {
+    background: var(--coral-light);
+    color: var(--coral);
+  }
+  .tool-hint {
+    position: absolute;
+    bottom: 0.55rem; right: 0.7rem;
+    font-size: 0.65rem;
+    color: var(--gray-border);
+    transition: color 0.2s;
+  }
+  .tool-card:hover .tool-hint { color: var(--step-color); }
+
+  /* ── Detail Panel ────────────────────────────────────────── */
+  .detail-panel {
+    display: none;
+    background: var(--white);
+    border-radius: 1rem;
+    border: 1.5px solid var(--gray-border);
+    padding: 1.4rem 1.5rem;
+    margin-top: 0.75rem;
+    animation: expandIn 0.22s ease;
+    position: relative;
+  }
+  .detail-panel.visible { display: block; }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: scaleY(0.92); transform-origin: top; }
+    to   { opacity: 1; transform: scaleY(1); }
+  }
+
+  .detail-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--step-color);
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .detail-tool-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--step-color);
+  }
+  .detail-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--gray-mid);
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.4rem;
+    transition: background 0.15s, color 0.15s;
+  }
+  .detail-close:hover { background: var(--gray-light); color: var(--gray); }
+
+  .detail-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-mid);
+    margin-bottom: 0.6rem;
+  }
+  .limit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .limit-list li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: var(--gray);
+    line-height: 1.45;
+  }
+  .limit-bullet {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    margin-top: 0.05rem;
+  }
+  .limit-bullet.free-bullet  { background: var(--teal-light); color: var(--teal); }
+  .limit-bullet.paid-bullet  { background: var(--coral-light); color: var(--coral); }
+
+  .detail-warning {
+    margin-top: 0.85rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--amber-light);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--amber);
+    font-size: 0.8rem;
+    color: var(--amber);
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: var(--step-color);
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid currentColor;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.5rem;
+    transition: background 0.15s;
+  }
+  .detail-link:hover { background: color-mix(in srgb, var(--step-color) 8%, transparent); }
+
+  /* ── Ethics Banner ───────────────────────────────────────── */
+  .ethics-banner {
+    background: var(--purple-light);
+    border-left: 4px solid var(--purple);
+    border-radius: 0 0.75rem 0.75rem 0;
+    padding: 0.9rem 1.2rem;
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+  .ethics-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .ethics-text { font-size: 0.88rem; color: var(--gray); line-height: 1.5; }
+  .ethics-text strong { color: var(--purple); }
+
+  /* ── Divider Arrow ───────────────────────────────────────── */
+  .stage-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5rem;
+    color: var(--gray-border);
+    font-size: 1.2rem;
+    margin: -0.5rem 0;
+  }
+
+  /* ── Footer ─────────────────────────────────────────────── */
+  footer {
+    background: var(--gray-dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2rem 1.5rem;
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+  footer a { color: rgba(255,255,255,0.75); text-decoration: underline; }
+  .cc-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .cc-icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  /* CC SVG icons inline */
+  .cc-svg {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cc-label {
+    color: rgba(255,255,255,0.9);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .footer-note {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.5rem;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .site-header h1 { font-size: 1.6rem; }
+    .container { padding: 1.5rem 1rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-badge">Ciclo de posgrado y actualización - Taller 4 · 2026</div>
+  <h1>Herramientas de <span>IA</span><br>para la Investigación Académica</h1>
+  <p><strong>Del tema sin definir hasta la publicación</strong></p>
+  <p>Un mapa interactivo de herramientas para cada etapa</p>
+  <div class="header-note">
+    <span>👆</span> Clic en cada herramienta para ver los límites de la cuenta gratuita
+  </div>
+   <a href="repositorio_prompts.html" class="repo-btn">
+    <span>📋</span> Ver Repositorio de Prompts
+  </a>
+
+</header>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-free"></div> Cuenta gratuita disponible</div>
+  <div class="legend-item"><div class="legend-dot dot-paid"></div> Solo pago / trial limitado</div>  
+</div>
+
+<!-- MAIN -->
+<main class="container" id="main"></main>
+
+<!-- ETHICS -->
+<div class="container" style="padding-top:0">
+  <div class="ethics-banner">
+    <div class="ethics-icon">⚖️</div>
+    <div class="ethics-text">
+      <strong>Uso ético transversal:</strong> La IA es una herramienta de apoyo, no un reemplazo del investigador. Verificá siempre las fuentes con espíritu crítico. Declarar el uso de IA en publicaciones académicas es una práctica de integridad. Los límites de planes gratuitos pueden cambiar — consultá las páginas oficiales de cada herramienta.
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="cc-block">
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" title="Creative Commons Attribution 4.0" style="display:flex;align-items:center;gap:6px;text-decoration:none;">
+  <img src="img/lcc.png" alt="Creative Commons BY 4.0" style="width:88px; height:31px; object-fit:contain;">
+</a>
+    <span class="cc-label">Creative Commons Attribution 4.0 Internacional</span>
+  </div>
+  <div>
+    Este recurso fue creado por el equipo de docentes del taller Herramientas de IA para la Investigación Académica. Se distribuye bajo una licencia 
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.    
+  </div>  
+
+</footer>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────
+const stages = [
+  {
+    n: 0, label: "Sin tema: el punto de partida",
+    desc: "Cuando no sabés qué investigar — explorá antes de comprometerte",
+    color: "#5C6BC0", cardBg: "#F0F1FB",
+    icon: "🧭",
+    tools: [
+      { name: "Perplexity AI",  url: "perplexity.ai",  icon: "🔍",    logo: "img/perplexity.png", free: true,
+        limits: [
+          "5 búsquedas Pro por día (modelos avanzados)",
+          "Búsquedas estándar ilimitadas con modelo base",
+          "Sin análisis de archivos ni generación de imágenes en free",
+          "Historial de conversaciones limitado"
+        ]
+      },
+      { name: "DeepSeek",       url: "deepseek.com",      icon: "🤖",    logo: "img/deepseek.jpeg", free: true,
+        limits: [
+          "Acceso gratuito vía web y app sin registro requerido",
+          "Posibles colas o lentitud en horas pico",
+          "API: $5 USD de crédito gratis, luego pago por tokens",
+          "Sin funciones avanzadas de DeepSeek-R2 completo"
+        ]
+      },
+      { name: "Gemini",         url: "gemini.google.com",  icon: "🧠",  logo: "img/gemini.png", free: true,
+        limits: [
+          "Gemini 2.0 Flash disponible gratis",
+          "Gemini Advanced requiere Google One AI Premium: ~$19.99/mes",
+          "Límite de mensajes por hora en uso intensivo",
+          "Extensiones con Google Workspace limitadas en free"
+        ]
+      },
+    ]
+  },
+  {
+    n: 1, label: "Exploración inicial del campo",
+    desc: "¿Qué dice la comunidad científica? Panorama general sin profundizar",
+    color: "#0F6E56", cardBg: "#E8F8F2",
+    icon: "🌐",
+    tools: [
+      { name: "Consensus",  url: "consensus.app",  icon: "📊", logo: "img/consensus.jpg", free: true,
+        limits: [
+          "20 búsquedas por mes en plan gratuito",
+          "Sin filtros avanzados (año, tipo de estudio, journal)",
+          "Sin Consensus Meter (% de acuerdo científico) en free",
+          "Sin exportación de resultados",
+          "Premium: ~$9.99/mes o $99/año"
+        ]
+      },
+      { name: "Elicit",     url: "elicit.com",  icon: "🔬",   logo: "img/elicit.png", free: true,
+        limits: [
+          "5 búsquedas por mes en plan gratuito",
+          "Hasta 4 columnas de extracción de datos por búsqueda",
+          "Sin revisiones sistemáticas completas",
+          "Sin exportación CSV/Excel en plan free",
+          "Plus: ~$12/mes"
+        ]
+      },
+    ]
+  },
+  {
+    n: 2, label: "Búsqueda y recuperación de fuentes",
+    desc: "Encontrar papers reales y evaluarlos con criterio",
+    color: "#1A9070", cardBg: "#E5F6EF",
+    icon: "📚",
+    tools: [
+      { name: "Semantic Scholar", url: "semanticscholar.org", logo: "img/semantic_scholar.png" , icon: "🎓", free: true,
+        limits: [
+          "✅ Completamente gratuito — proyecto sin fines de lucro (Allen Institute for AI)",
+          "API pública: 100 peticiones por 5 minutos",
+          "Sin funciones premium — todo el contenido es libre",
+          "Alertas de nuevos papers: gratuitas con registro"
+        ]
+      },
+      { name: "Scopus",           url: "scopus.com",           logo: "img/scopus.svg", icon: "📚", free: false,
+        limits: [
+          "❌ NO tiene plan gratuito individual",
+          "Acceso institucional: requiere suscripción de universidad",
+          "Preview gratuita: búsqueda básica sin abstracts completos",
+          "Precio institucional: desde ~$10,000 USD/año",
+          "Alternativa free: Semantic Scholar o Google Scholar"
+        ],
+        warning: "Requiere acceso institucional. Consultá si tu universidad tiene suscripción."
+      },
+      { name: "Google Scholar",   url: "scholar.google.com",   logo: "img/google_scholar.png", icon: "🎓", free: true,
+        limits: [
+          "✅ Completamente gratuito — sin planes de pago",
+          "Sin filtros avanzados de metodología o tipo de estudio",
+          "No distingue fuentes indexadas de no indexadas",
+          "Alertas de citas y nuevos papers: gratuitas",
+          "Acceso al texto completo depende del editor"
+        ]
+      },
+      { name: "Scite",            url: "scite.ai",       icon: "✅",        logo: "img/scite.svg", free: false,
+        limits: [
+          "❌ Trial: 7 días gratuitos con tarjeta de crédito requerida",
+          "Plan free muy limitado: solo tipo de cita sin detalles",
+          "Sin dashboards de análisis de literatura",
+          "Individual: ~$20/mes o $144/año",
+          "Institucional: precio variable"
+        ],
+        warning: "Requiere tarjeta de crédito incluso para el trial. Herramienta de referencia para proyectos avanzados."
+      },
+    ]
+  },
+  {
+    n: 3, label: "Mapeo de literatura + Setup",
+    desc: "Ver el campo visualmente y organizar todo desde el primer día",
+    color: "#2EA882", cardBg: "#E3F5EF",
+    icon: "🗺️",
+    tools: [
+      { name: "Litmaps",          url: "litmaps.com",          icon: "🗺️", logo: "img/litmaps.jpg",  free: true,
+        limits: [
+          "3 mapas guardados en plan gratuito",
+          "Hasta 500 artículos por mapa",
+          "Sin colaboración en tiempo real",
+          "Sin exportación en alta resolución",
+          "Pro: ~$10/mes o $8/mes anual"
+        ]
+      },
+      { name: "Research Rabbit",  url: "researchrabbit.ai",    icon: "🐇", logo: "img/researchrabbit.png", free: true,
+        limits: [
+          "✅ Completamente gratuito — financiado por donaciones",
+          "Colecciones ilimitadas de papers",
+          "Sin límite de papers por colección",
+          "Integración con Zotero gratuita",
+          "No tiene plan de pago — 100% free"
+        ]
+      },
+      { name: "Connected Papers", url: "connectedpapers.com",  icon: "🕸️", logo: "img/connectedpaper.png", free: true,
+        limits: [
+          "5 grafos por mes en plan gratuito",
+          "Sin historial de grafos guardados",
+          "Sin modo prior/derivative works simultáneo en free",
+          "Academic: gratuito con email institucional (ilimitado)",
+          "Pro: ~$3/mes"
+        ]
+      },
+      { name: "Zotero",           url: "zotero.org",            icon: "📂", logo: "img/zotero.png", free: true,
+        limits: [
+          "300 MB de almacenamiento en nube gratuito",
+          "Software de escritorio: completamente gratuito y sin límites",
+          "Sincronización de PDFs limitada a 300 MB (metadata ilimitada)",
+          "Almacenamiento adicional: 2 GB/$20 año, 6 GB/$60 año",
+          "Grupos de colaboración: gratuitos con 300 MB compartidos"
+        ]
+      },
+      { name: "Mendeley",         url: "mendeley.com",          icon: "📎", logo: "img/mendeley.png", free: true,
+        limits: [
+          "2 GB de almacenamiento personal gratuito",
+          "100 MB de almacenamiento grupal compartido",
+          "Grupos privados: máximo 25 miembros en free",
+          "Funciones IA avanzadas requieren plan institucional Elsevier",
+          "⚠️ Elsevier redujo funciones tras adquisición — se recomienda Zotero"
+        ],
+        warning: "Desde la adquisición por Elsevier, Mendeley redujo funciones. Zotero sigue siendo la opción más completa y libre."
+      },
+      { name: "Notion",           url: "notion.com",            icon: "📋", logo: "img/notion.png", free: true,
+        limits: [
+          "Bloques ilimitados para uso individual (desde nov 2022)",
+          "Historial de versiones: 7 días en plan free",
+          "Invitados: hasta 10 colaboradores en workspace free",
+          "Subida de archivos: máximo 5 MB por archivo",
+          "Notion AI: 20 respuestas gratis, luego $10/mes"
+        ]
+      },
+    ]
+  },
+  {
+    n: 4, label: "Comprensión y análisis de papers",
+    desc: "Conversar con la literatura científica — leer más profundo en menos tiempo",
+    color: "#26A69A", cardBg: "#E4F5F4",
+    icon: "💬",
+    tools: [
+      { name: "SciSpace",    url: "typeset.io",             icon: "🚀", logo: "img/scispace.jpg", free: true,
+        limits: [
+          "20 preguntas por día sobre PDFs en plan gratuito",
+          "Sin resúmenes automáticos ilimitados",
+          "Límite de 50 PDFs subidos en total en free",
+          "Sin acceso a SciSpace Copilot completo",
+          "Premium: ~$12/mes"
+        ]
+      },
+      { name: "NotebookLM",  url: "notebooklm.google.com",  icon: "📝", logo: "img/notebooklm.png", free: true,
+        limits: [
+          "Hasta 50 fuentes por notebook (PDFs, docs, URLs, texto)",
+          "Hasta 500.000 palabras por fuente",
+          "Máximo 100 notebooks en plan gratuito",
+          "50 chats por día por notebook",
+          "Plus (Google One AI Premium $19.99/mes): sin límites"
+        ]
+      },
+      { name: "Humata AI",   url: "humata.ai",              icon: "📝", logo: "img/humata.jpg", free: true,
+        limits: [
+          "60 páginas de PDF por mes en plan gratuito",
+          "Máximo 3 archivos subidos simultáneamente",
+          "Sin análisis comparativo entre documentos",
+          "Sin exportación de respuestas",
+          "Pro: ~$14.99/mes (ilimitado)"
+        ]
+      },
+    ]
+  },
+  {
+    n: 5, label: "Diseño del proyecto y escritura",
+    desc: "Estructurar hipótesis, marcos teóricos y redactar con apoyo de IA",
+    color: "#534AB7", cardBg: "#EEEDFE",
+    icon: "✍️",
+    tools: [
+      { name: "Claude",      url: "claude.ai",       icon: "🧠", logo: "img/claude.svg", free: true,
+        limits: [
+          "Acceso a Claude Sonnet con límite de mensajes diario (varía según demanda)",
+          "Sin acceso a Claude Opus en plan free",
+          "Sin Projects ni memoria persistente en plan free",
+          "Sin subida de archivos ilimitada",
+          "Pro: $20/mes — sin límites en Sonnet, acceso a Opus"
+        ]
+      },
+      { name: "ChatGPT",     url: "chatgpt.com",     icon: "💬", logo: "img/chatgpt.svg", free: true,
+        limits: [
+          "GPT-4o con límite de mensajes (aprox. 10-15 por 3 horas en pico)",
+          "Sin acceso a herramientas avanzadas en free",
+          "DALL-E: 2 imágenes por día en free",
+          "Sin memoria persistente en algunos países",
+          "Plus: $20/mes — límites ampliados y acceso prioritario"
+        ]
+      },
+      { name: "Gemini",      url: "gemini.google.com", icon: "🧠", logo: "img/gemini.png", free: true,
+        limits: [
+          "Gemini 2.0 Flash disponible gratis",
+          "Gemini Advanced requiere Google One AI Premium: ~$19.99/mes",
+          "Límite de mensajes por hora en uso intensivo"
+        ]
+      },
+      { name: "DeepSeek",    url: "deepseek.com",    icon: "🤖", logo: "img/deepseek.png", free: true,
+        limits: [
+          "Acceso gratuito vía web sin registro",
+          "Posibles colas en horas pico",
+          "API: $5 USD de crédito gratis, luego pago"
+        ]
+      },
+      { name: "QuillBot",    url: "quillbot.com",    icon: "✒️", logo: "img/quillbot.png", free: true,
+        limits: [
+          "Paráfrasis: máximo 125 palabras por vez en plan free",
+          "Solo 2 modos de paráfrasis (9 en Premium)",
+          "Verificador de gramática: limitado a 150 palabras",
+          "Resumen: máximo 1.200 palabras de input",
+          "Sin detector de plagio en free",
+          "Premium: ~$8.33/mes (anual)"
+        ]
+      },
+      { name: "Jenni AI",    url: "jenni.ai",        icon: "📝", logo: "img/jenni.svg", free: true,
+        limits: [
+          "200 palabras por día generadas con IA en free",
+          "Sin autocompletado ilimitado",
+          "1 proyecto activo en plan free",
+          "Sin integración con Zotero/Mendeley en free",
+          "Plus: ~$20/mes (ilimitado)"
+        ]
+      },
+    ]
+  },
+  {
+    n: 6, label: "Análisis de datos e instrumentos",
+    desc: "Herramientas según tipo de investigación — cualitativa, cuantitativa o mixta",
+    color: "#7B5EA7", cardBg: "#F3EFFD",
+    icon: "📊",
+    tools: [
+      { name: "SPSS",        url: "ibm.com/spss",    icon: "📉" , logo: "img/spss.svg", free: false,
+        limits: [
+          "❌ NO tiene plan gratuito individual",
+          "Trial gratuito: 30 días con funciones completas",
+          "Precio: desde $99/mes para investigadores individuales",
+          "Licencias universitarias: varía por institución",
+          "Alternativa gratuita: JASP, R o Python"
+        ],
+        warning: "Consultá si tu institución tiene licencia antes de pagar. JASP es una excelente alternativa gratuita."
+      },
+      { name: "JASP",        url: "jasp-stats.org",  icon: "📈", logo: "img/jasp.jpg", free: true,
+        limits: [
+          "✅ Completamente gratuito y de código abierto",
+          "Sin límites de uso — todo incluido",
+          "Mantenido por la Universidad de Amsterdam",
+          "Requiere descarga e instalación local",
+          "Sin versión cloud — solo desktop"
+        ]
+      },
+      { name: "Atlas.ti",    url: "atlasti.com",     icon: "🔍", logo: "img/atlas.png", free: false,
+        limits: [
+          "❌ Trial gratuito: solo 5 días con funciones completas",
+          "Plan student: ~$99/año (con email universitario)",
+          "Sin plan gratuito permanente",
+          "Precio comercial: desde $399/año",
+          "Alternativa: MAXQDA (trial extendido para estudiantes)"
+        ],
+        warning: "Si tenés email universitario, el plan student es la opción más accesible (~$99/año)."
+      },
+      { name: "Julius AI",   url: "julius.ai",       icon: "🤖", logo: "img/julius.jpeg", free: true,
+        limits: [
+          "15 mensajes por día en plan gratuito",
+          "Análisis de archivos: hasta 10 MB en free",
+          "Sin acceso a GPT-4o y Claude en plan free",
+          "Sin exportación de código generado en free",
+          "Pro: ~$20/mes"
+        ]
+      },
+    ]
+  },
+  {
+    n: 7, label: "Revisión, estilo y validación",
+    desc: "Pulir la escritura académica y verificar originalidad",
+    color: "#C0442A", cardBg: "#FAECE7",
+    icon: "✅",
+    tools: [
+      { name: "Grammarly",   url: "grammarly.com",   icon: "📝", logo: "img/grammarly.svg", free: true,
+        limits: [
+          "Correcciones básicas de gramática y ortografía (ilimitadas)",
+          "Sin sugerencias de claridad, engagement ni estilo en free",
+          "Sin detector de plagio en plan free",
+          "GrammarlyGO (IA generativa): 100 prompts/mes gratis",
+          "Premium: ~$12/mes (anual) — estilo académico completo"
+        ]
+      },
+      { name: "QuillBot",    url: "quillbot.com",    icon: "✒️" , logo: "img/quillbot.png", free: true,
+        limits: [
+          "Paráfrasis: máximo 125 palabras por vez en plan free",
+          "Solo 2 modos de paráfrasis en free (9 en Premium)",
+          "Verificador de gramática: limitado a 150 palabras",
+          "Sin detector de plagio en free",
+          "Premium: ~$8.33/mes (anual)"
+        ]
+      },
+    ]
+  },
+  {
+    n: 8, label: "Publicación y proyección",
+    desc: "Buscar revistas, simular revisión por pares y comunicar tu investigación",
+    color: "#E67E22", cardBg: "#FEF3DC",
+    icon: "🚀",
+    tools: [
+      { name: "Gamma",       url: "gamma.app",       icon: "🎨", logo: "img/gamma.png", free: true,
+        limits: [
+          "400 créditos de IA al registrarse (no se renuevan en free)",
+          "Cada generación consume aprox. 40 créditos (~10 presentaciones)",
+          "Marca de agua 'Made with Gamma' en plan free",
+          "Sin exportación a PowerPoint en free",
+          "Sin acceso a temas premium",
+          "Plus: ~$8/mes (créditos mensuales y sin marca de agua)"
+        ]
+      },
+      { name: "Claude",      url: "claude.ai",       icon: "🧠", logo: "img/claude.svg", free: true,
+        limits: [
+          "Prompts para buscar revistas: funciona en plan free",
+          "Simulación revisor por pares: funciona en plan free",
+          "Límite de mensajes diario en Sonnet free (varía según demanda)",
+          "Pro $20/mes para uso intensivo sin cortes"
+        ]
+      },
+      { name: "ChatGPT",     url: "chatgpt.com",     icon: "💬", logo: "img/chatgpt.svg", free: true,
+        limits: [
+          "Búsqueda de revistas con IA funciona en plan free",
+          "GPT-4o con límite ~10-15 mensajes por 3 horas en pico",
+          "Plus $20/mes para uso intensivo"
+        ]
+      },
+    ]
+  },
+];
+
+// ── Render ────────────────────────────────────────────────────────
+const main = document.getElementById('main');
+let activeCard = null;
+let activePanel = null;
+
+stages.forEach((stage, si) => {
+  // Connector arrow (not before first)
+  if (si > 0) {
+    const conn = document.createElement('div');
+    conn.className = 'stage-connector';
+    conn.innerHTML = '↓';
+    conn.style.color = stage.color;
+    main.appendChild(conn);
+  }
+
+  const stageEl = document.createElement('div');
+  stageEl.className = 'stage';
+  stageEl.style.setProperty('--step-color', stage.color);
+  stageEl.style.setProperty('--card-bg', stage.cardBg);
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'stage-header';
+  hdr.innerHTML = `
+    <div class="stage-number" style="color:${stage.color}">${stage.n}</div>
+    <div class="stage-meta">
+      <div class="stage-label" style="color:${stage.color}">${stage.icon} ${stage.label}</div>
+      <div class="stage-desc">${stage.desc}</div>
+    </div>`;
+  stageEl.appendChild(hdr);
+
+  // Grid
+  const grid = document.createElement('div');
+  grid.className = 'tools-grid';
+
+  // Detail panel container (after grid)
+  const panelContainer = document.createElement('div');
+
+  stage.tools.forEach((tool, ti) => {
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    card.style.setProperty('--step-color', stage.color);
+    card.style.setProperty('--card-bg', stage.cardBg);
+
+    const statusClass = tool.free ? 'status-free' : 'status-paid';
+    const statusText  = tool.free ? '✓ Free' : '⚠ Pago';
+
+    const iconHTML = tool.logo
+      ? `<img class="tool-icon-img" src="${tool.logo}" alt="${tool.name} logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">\n      <span class="tool-icon" style="display:none">${tool.icon}</span>`
+      : `<span class="tool-icon">${tool.icon}</span>`;
+
+    card.innerHTML = `
+      ${iconHTML}
+      <div class="tool-name">${tool.name}</div>
+      <span class="tool-url">${tool.url}</span>
+      <span class="tool-status ${statusClass}">${statusText}</span>
+      <span class="tool-hint">ver detalles →</span>`;
+
+    card.addEventListener('click', () => {
+      const isThisActive = card.classList.contains('active');
+
+      // Reset all cards and panels in this stage
+      grid.querySelectorAll('.tool-card').forEach(c => c.classList.remove('active'));
+      panelContainer.innerHTML = '';
+
+      if (!isThisActive) {
+        card.classList.add('active');
+
+        // Build detail panel
+        const panel = document.createElement('div');
+        panel.className = 'detail-panel visible';
+        panel.style.setProperty('--step-color', stage.color);
+
+        const bulletClass = tool.free ? 'free-bullet' : 'paid-bullet';
+        const bulletIcon  = tool.free ? '✓' : '!';
+
+        let limitsHTML = tool.limits.map(l =>
+          `<li>
+            <span class="limit-bullet ${bulletClass}">${bulletIcon}</span>
+            <span>${l}</span>
+          </li>`
+        ).join('');
+
+        let warningHTML = tool.warning
+          ? `<div class="detail-warning">⚠️ <span>${tool.warning}</span></div>`
+          : '';
+
+        panel.innerHTML = `
+          <div class="detail-header">
+            <div class="detail-tool-name" style="color:${stage.color}">${tool.icon} ${tool.name}</div>
+            <button class="detail-close" onclick="this.closest('.detail-panel').remove();
+              document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'))">✕</button>
+          </div>
+          <div class="detail-section-title">Límites del plan gratuito</div>
+          <ul class="limit-list">${limitsHTML}</ul>
+          ${warningHTML}
+          <a class="detail-link" href="https://${tool.url}" target="_blank" rel="noopener">
+            Visitar ${tool.url} ↗
+          </a>`;
+
+        panelContainer.appendChild(panel);
+
+        // Smooth scroll to panel
+        setTimeout(() => {
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+
+  stageEl.appendChild(grid);
+  stageEl.appendChild(panelContainer);
+  main.appendChild(stageEl);
+});
+</script>
+</body>
+</html>

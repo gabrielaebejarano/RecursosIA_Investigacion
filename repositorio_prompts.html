@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repositorio de Prompts — IA para la Investigación Académica</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:         #0F6E56;
+  --teal-mid:     #1A9070;
+  --teal-light:   #E1F5EE;
+  --purple:       #534AB7;
+  --purple-light: #EEEDFE;
+  --coral:        #C0442A;
+  --coral-light:  #FAECE7;
+  --amber:        #A0620E;
+  --amber-light:  #FEF3DC;
+  --gray-dark:    #1A1A1A;
+  --gray:         #3D3D3D;
+  --gray-mid:     #6B7280;
+  --gray-light:   #F5F5F3;
+  --border:       #E5E7EB;
+  --white:        #FFFFFF;
+  --bg:           #F8F9FA;
+  --code-bg:      #1E2433;
+  --code-text:    #E8EBF4;
+  --code-accent:  #7DD3B0;
+  --code-string:  #FFB86C;
+  --code-key:     #BD93F9;
+
+  --s0: #5C6BC0; --s0-l: #EEEEFF;
+  --s1: #0F6E56; --s1-l: #E1F5EE;
+  --s2: #1A9070; --s2-l: #DCEEE8;
+  --s3: #2EA882; --s3-l: #DFF0EA;
+  --s4: #26A69A; --s4-l: #DEF0EF;
+  --s5: #534AB7; --s5-l: #EEEDFE;
+  --s6: #7B5EA7; --s6-l: #F2EEFA;
+  --s7: #C0442A; --s7-l: #FAECE7;
+  --s8: #D4861A; --s8-l: #FEF3DC;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--gray-dark);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content:'';
+  position:absolute; top:-80px; right:-80px;
+  width:300px; height:300px; border-radius:50%;
+  background: rgba(83,74,183,0.15);
+}
+.header::after {
+  content:'';
+  position:absolute; bottom:-60px; left:-40px;
+  width:200px; height:200px; border-radius:50%;
+  background: rgba(15,110,86,0.12);
+}
+.header-badge {
+  display:inline-block;
+  background:rgba(255,255,255,0.1);
+  color:#A0D8C8;
+  font-family:'Inter',sans-serif;
+  font-size:0.7rem; font-weight:700;
+  letter-spacing:0.14em; text-transform:uppercase;
+  padding:0.3rem 1rem; border-radius:2rem;
+  margin-bottom:1rem;
+}
+.header h1 {
+  font-family:'Inter',sans-serif;
+  font-size:clamp(1.7rem,4vw,2.8rem);
+  font-weight:800; color:#fff;
+  line-height:1.15; max-width:680px;
+  margin:0 auto 0.75rem;
+}
+.header h1 em { color:#A0D8C8; font-style:normal; }
+.header p {
+  color:rgba(255,255,255,0.6);
+  font-size:0.95rem; max-width:540px;
+  margin:0 auto 1.4rem; font-weight:300;
+}
+.header-pills {
+  display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap;
+}
+.pill {
+  background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.8);
+  font-size:0.78rem; padding:0.28rem 0.75rem;
+  border-radius:2rem; border:1px solid rgba(255,255,255,0.12);
+}
+
+
+.repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .repo-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+
+/* ── ANATOMY BOX ── */
+.anatomy-section {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:1.5rem 1.5rem;
+}
+.anatomy-inner {
+  max-width:960px; margin:0 auto;
+}
+.anatomy-title {
+  font-family:'Inter',sans-serif;
+  font-size:0.8rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--gray-mid); margin-bottom:1rem;
+}
+.anatomy-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+  gap:0.6rem;
+}
+.anatomy-item {
+  background:var(--gray-light);
+  border-radius:0.6rem;
+  padding:0.65rem 0.8rem;
+}
+.anatomy-key {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem; font-weight:500;
+  color:var(--purple); letter-spacing:0.05em;
+  text-transform:uppercase; margin-bottom:0.2rem;
+}
+.anatomy-val {
+  font-size:0.8rem; color:var(--gray);
+  line-height:1.35;
+}
+.anatomy-tip {
+  margin-top:0.9rem;
+  padding:0.7rem 1rem;
+  background:var(--amber-light);
+  border-left:3px solid var(--amber);
+  border-radius:0 0.5rem 0.5rem 0;
+  font-size:0.82rem; color:var(--amber);
+  display:flex; gap:0.5rem; align-items:flex-start;
+}
+
+/* ── NAV ── */
+.sticky-nav {
+  position:sticky; top:0; z-index:100;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+  padding:0.5rem 1rem;
+  overflow-x:auto;
+}
+.nav-inner {
+  display:flex; gap:0.4rem;
+  max-width:960px; margin:0 auto;
+  flex-wrap:nowrap; align-items:center;
+}
+.nav-btn {
+  background:none; border:none; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.75rem; font-weight:500;
+  color:var(--gray-mid);
+  padding:0.28rem 0.7rem;
+  border-radius:2rem;
+  white-space:nowrap;
+  transition:background 0.15s, color 0.15s;
+  border:1px solid transparent;
+}
+.nav-btn:hover { background:var(--gray-light); color:var(--gray); }
+.nav-btn.active { color:var(--white); }
+
+/* ── MAIN ── */
+.container { max-width:960px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+
+/* ── STAGE SECTION ── */
+.stage-section {
+  margin-bottom:3rem;
+  scroll-margin-top:60px;
+  animation:fadeUp 0.4s ease both;
+}
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.stage-section:nth-child(1){animation-delay:0.05s}
+.stage-section:nth-child(2){animation-delay:0.10s}
+.stage-section:nth-child(3){animation-delay:0.15s}
+.stage-section:nth-child(4){animation-delay:0.20s}
+.stage-section:nth-child(5){animation-delay:0.25s}
+.stage-section:nth-child(6){animation-delay:0.30s}
+.stage-section:nth-child(7){animation-delay:0.35s}
+.stage-section:nth-child(8){animation-delay:0.40s}
+.stage-section:nth-child(9){animation-delay:0.45s}
+
+.stage-heading {
+  display:flex; align-items:center; gap:0.9rem;
+  margin-bottom:1.2rem;
+  padding-bottom:0.75rem;
+  border-bottom:2px solid var(--stage-color);
+}
+.stage-num {
+  font-family:'Inter',sans-serif;
+  font-size:2.2rem; font-weight:800;
+  color:var(--stage-color); line-height:1;
+  flex-shrink:0;
+}
+.stage-info {}
+.stage-label {
+  font-family:'Inter',sans-serif;
+  font-size:1.1rem; font-weight:700;
+  color:var(--stage-color); line-height:1.2;
+}
+.stage-desc {
+  font-size:0.83rem; color:var(--gray-mid);
+  margin-top:0.15rem; font-weight:300;
+}
+.stage-tools-tag {
+  margin-left:auto; flex-shrink:0;
+  font-size:0.72rem; color:var(--stage-color);
+  background:var(--stage-light);
+  padding:0.25rem 0.65rem; border-radius:2rem;
+  font-weight:500;
+}
+
+/* ── PROMPT CARD ── */
+.prompt-card {
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:1rem;
+  margin-bottom:1rem;
+  overflow:hidden;
+  transition:box-shadow 0.18s;
+}
+.prompt-card:hover { box-shadow:0 4px 18px rgba(0,0,0,0.07); }
+
+.prompt-card-header {
+  display:flex; align-items:center; gap:0.8rem;
+  padding:0.85rem 1.1rem;
+  cursor:pointer;
+  user-select:none;
+}
+.prompt-card-header:hover { background:var(--stage-light); }
+
+.prompt-number {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem; font-weight:500;
+  color:var(--white);
+  background:var(--stage-color);
+  padding:0.18rem 0.5rem;
+  border-radius:0.35rem;
+  flex-shrink:0;
+}
+.prompt-title {
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem; font-weight:700;
+  color:var(--gray-dark); flex:1;
+}
+.prompt-tags {
+  display:flex; gap:0.35rem; flex-wrap:wrap;
+}
+.prompt-tag {
+  font-size:0.65rem;
+  padding:0.15rem 0.5rem;
+  border-radius:2rem;
+  background:var(--stage-light);
+  color:var(--stage-color);
+  font-weight:500;
+  white-space:nowrap;
+}
+.prompt-chevron {
+  color:var(--gray-mid); font-size:0.85rem;
+  transition:transform 0.2s; flex-shrink:0;
+}
+.prompt-card.open .prompt-chevron { transform:rotate(180deg); }
+
+.prompt-body {
+  display:none;
+  border-top:1px solid var(--border);
+  padding:1.2rem 1.1rem;
+}
+.prompt-card.open .prompt-body { display:block; }
+
+/* Objective */
+.prompt-objective {
+  font-size:0.85rem; color:var(--gray-mid);
+  margin-bottom:1rem; font-style:italic;
+  display:flex; gap:0.5rem; align-items:flex-start;
+}
+
+/* Code block */
+.code-block {
+  background:var(--code-bg);
+  border-radius:0.75rem;
+  overflow:hidden;
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.code-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.5rem 0.9rem;
+  background:rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.code-label {
+  font-size:0.67rem; color:rgba(255,255,255,0.35);
+  text-transform:uppercase; letter-spacing:0.08em;
+}
+.copy-btn {
+  background:rgba(255,255,255,0.08);
+  border:none; cursor:pointer;
+  color:rgba(255,255,255,0.55);
+  font-size:0.72rem; font-family:'DM Sans',sans-serif;
+  padding:0.22rem 0.65rem; border-radius:0.35rem;
+  transition:background 0.15s, color 0.15s;
+  display:flex; align-items:center; gap:0.3rem;
+}
+.copy-btn:hover { background:rgba(255,255,255,0.15); color:#fff; }
+.copy-btn.copied { color:var(--code-accent); }
+
+.code-content {
+  padding:1rem 1rem;
+  font-size:0.82rem;
+  line-height:1.7;
+  color:var(--code-text);
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+/* Syntax-like highlighting via spans */
+.tok-key   { color:var(--code-key);    font-weight:500; }
+.tok-str   { color:var(--code-string); }
+.tok-acc   { color:var(--code-accent); }
+.tok-dim   { color:rgba(255,255,255,0.35); }
+
+/* Example block */
+.example-block {
+  background:var(--stage-light);
+  border-left:3px solid var(--stage-color);
+  border-radius:0 0.6rem 0.6rem 0;
+  padding:0.9rem 1rem;
+  margin-bottom:1rem;
+}
+.example-label {
+  font-family:'Inter',sans-serif;
+  font-size:0.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--stage-color); margin-bottom:0.5rem;
+}
+.example-text {
+  font-size:0.85rem; color:var(--gray);
+  font-style:italic; line-height:1.55;
+}
+
+/* Variant */
+.variant-block {
+  background:var(--gray-light);
+  border-radius:0.6rem;
+  padding:0.8rem 0.9rem;
+  margin-bottom:0.8rem;
+}
+.variant-label {
+  font-family:'Inter',sans-serif;
+  font-size:0.68rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--gray-mid); margin-bottom:0.4rem;
+}
+.variant-text {
+  font-size:0.83rem; color:var(--gray);
+  line-height:1.5;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* Tips */
+.tip-row {
+  display:flex; gap:0.5rem; align-items:flex-start;
+  font-size:0.82rem; color:var(--gray-mid);
+  margin-top:0.5rem;
+}
+.tip-icon { flex-shrink:0; }
+
+/* ── PRINCIPLES SIDEBAR ── */
+.principles-bar {
+  background:var(--purple-light);
+  border-radius:0.85rem;
+  padding:1.1rem 1.2rem;
+  margin-bottom:2rem;
+}
+.principles-title {
+  font-family:'Inter',sans-serif;
+  font-size:0.78rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.09em;
+  color:var(--purple); margin-bottom:0.7rem;
+}
+.principles-list {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:0.5rem;
+}
+.principle-item {
+  display:flex; gap:0.5rem; align-items:flex-start;
+  font-size:0.82rem; color:var(--gray);
+}
+.principle-num {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem; color:var(--purple);
+  background:var(--white);
+  width:20px; height:20px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-weight:600;
+}
+
+/* ── FOOTER ── */
+footer {
+  background:var(--gray-dark);
+  color:rgba(255,255,255,0.55);
+  text-align:center;
+  padding:2rem 1.5rem;
+  font-size:0.82rem;
+  line-height:1.8;
+}
+footer a { color:rgba(255,255,255,0.75); }
+.cc-block {
+  display:flex; align-items:center; justify-content:center;
+  gap:0.6rem; margin-bottom:0.75rem; flex-wrap:wrap;
+}
+.cc-label {
+  color:rgba(255,255,255,0.9);
+  font-family:'Inter',sans-serif;
+  font-size:0.85rem; font-weight:600;
+}
+.footer-note {
+  font-size:0.72rem;
+  color:rgba(255,255,255,0.3);
+  margin-top:0.4rem;
+}
+
+@media(max-width:600px){
+  .anatomy-grid { grid-template-columns:1fr 1fr; }
+  .header h1 { font-size:1.6rem; }
+  .container { padding:1.5rem 1rem 3rem; }
+  .prompt-tags { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-badge">Recurso didáctico · Taller 4: Herramientas de IA para la Investigación Académica · 2026</div>
+  <h1>Repositorio de <em>Prompts</em><br>para Investigación Académica</h1>
+  <p>Prompts estratégicos, listos para usar, organizados por etapa del proceso investigativo</p>
+  <div class="header-pills">
+    <span class="pill">📋 9 etapas</span>
+    <span class="pill">🧩 40+ prompts</span>
+    <span class="pill">💡 Ejemplos aplicados</span>
+    <span class="pill">🔄 Variantes incluidas</span>
+  </div>
+   <a href="index.html" class="repo-btn">
+    Volver al mapa de herramientas
+  </a>
+</header>
+
+<!-- ANATOMY -->
+<div class="anatomy-section">
+  <div class="anatomy-inner">
+    <div class="anatomy-title">🧬 Anatomía de un buen prompt</div>
+    <div class="anatomy-grid">
+      <div class="anatomy-item">
+        <div class="anatomy-key">ROL</div>
+        <div class="anatomy-val">Qué rol debe asumir la IA ("Actuá como...")</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-key">CONTEXTO</div>
+        <div class="anatomy-val">Quién sos y qué estás haciendo</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-key">TAREA</div>
+        <div class="anatomy-val">Qué pedís exactamente (verbo claro)</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-key">FORMATO</div>
+        <div class="anatomy-val">Cómo querés la respuesta (lista, tabla, párrafo)</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-key">RESTRICCIÓN</div>
+        <div class="anatomy-val">Qué NO debe hacer o asumir</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-key">EJEMPLO</div>
+        <div class="anatomy-val">Muestra de lo que esperás (opcional pero poderoso)</div>
+      </div>
+    </div>
+    <div class="anatomy-tip">
+      <span>⚡</span>
+      <span>No todos los prompts necesitan los 6 componentes. Usá los que apliquen al contexto. El componente más ignorado y más valioso es el <strong>FORMATO</strong> — pedí explícitamente cómo querés la respuesta.</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <div class="nav-inner" id="stageNav"></div>
+</nav>
+
+<!-- MAIN -->
+<main class="container">
+
+  <!-- PRINCIPLES -->
+  <div class="principles-bar">
+    <div class="principles-title">⚙️ Principios del prompting estratégico</div>
+    <div class="principles-list">
+      <div class="principle-item"><div class="principle-num">1</div><span><strong>Especificidad</strong> — un prompt vago produce respuesta vaga</span></div>
+      <div class="principle-item"><div class="principle-num">2</div><span><strong>Contexto primero</strong> — contá quién sos antes de pedir</span></div>
+      <div class="principle-item"><div class="principle-num">3</div><span><strong>Iterar</strong> — el mejor prompt surge del segundo o tercer intento</span></div>
+      <div class="principle-item"><div class="principle-num">4</div><span><strong>Pedir formato</strong> — tabla, lista, párrafo, JSON, etc.</span></div>
+      <div class="principle-item"><div class="principle-num">5</div><span><strong>Validar siempre</strong> — la IA puede alucinar. Verificá con fuentes</span></div>
+      <div class="principle-item"><div class="principle-num">6</div><span><strong>Declarar el uso</strong> — transparencia en publicaciones académicas</span></div>
+    </div>
+  </div>
+
+  <div id="stagesContainer"></div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <div class="cc-block">
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" title="Creative Commons Attribution 4.0" style="display:flex;align-items:center;gap:6px;text-decoration:none;">
+  <img src="img/lcc.png" alt="Creative Commons BY 4.0" style="width:88px; height:31px; object-fit:contain;">
+</a>
+    <span class="cc-label">Creative Commons Attribution 4.0 Internacional</span>
+  </div>
+  <div>
+    Este recurso fue creado por el equipo de docentes del taller Herramientas de IA para la Investigación Académica. Se distribuye bajo una licencia 
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.    
+  </div>  
+
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA — Prompts por etapa
+// ═══════════════════════════════════════════════════════════════
+const stages = [
+{
+  n:0, label:"Sin tema: el punto de partida", icon:"🧭",
+  desc:"Cuando no sabés qué investigar — explorá antes de comprometerte",
+  color:"#5C6BC0", light:"#EEEEFF",
+  tools:"Perplexity · DeepSeek · Gemini",
+  prompts:[
+    {
+      id:"0-1",
+      title:"Mapear subtemas de un campo amplio",
+      tags:["Exploración","Ideación"],
+      objective:"Convertir una intuición vaga en un mapa de subtemas investigables con diferente nivel de saturación bibliográfica.",
+      prompt:`Actuá como un investigador académico experto en análisis de campos científicos emergentes.
+
+CONTEXTO: Estoy en la etapa inicial de una investigación y tengo un área de interés amplia pero no un tema definido. Necesito orientarme estratégicamente.
+
+ÁREA DE INTERÉS: [escribí tu área aquí]
+
+TAREA: Identificá 6 a 8 subtemas específicos dentro de esta área que:
+  - Estén siendo investigados actualmente (últimos 5 años)
+  - Representen diferentes niveles de saturación: alguno muy estudiado, alguno emergente, alguno con debates abiertos
+  - Puedan formularse como pregunta de investigación
+
+FORMATO: Presentá cada subtema como:
+  → Nombre del subtema
+  → Por qué es relevante ahora
+  → Nivel de saturación bibliográfica (alto / medio / emergente)
+  → Una posible pregunta de investigación
+
+RESTRICCIÓN: No incluyas subtemas genéricos o teóricos sin aplicación empírica. Priorizá los que tienen implicaciones prácticas o debates recientes.`,
+      example:`ÁREA DE INTERÉS: Inteligencia artificial en la investigación científica
+
+→ Co-autoría humano-IA en publicaciones académicas
+   Por qué: Revistas como Nature y Science abrieron el debate en 2023
+   Saturación: Emergente
+   Pregunta: ¿Bajo qué condiciones es legítima la co-autoría con IA?
+
+→ Automatización del proceso de revisión por pares
+   Por qué: Hay experimentos reales en curso con IA como revisor
+   Saturación: Medio
+   Pregunta: ¿Puede la IA detectar fraudes metodológicos que los humanos pasan por alto?
+
+[...y así para cada subtema]`,
+      variant:`Variante — para afinar un tema ya identificado:
+"Tengo un tema: [X]. Ayudame a identificar el ángulo más original para abordarlo: qué ya está muy estudiado, qué está siendo ignorado y qué tensión o paradoja podría ser el núcleo de una investigación genuinamente novedosa."`,
+      tip:"Si la respuesta es muy general, añadí: 'Dame ejemplos con nombres de autores o papers reales que hayan abordado cada subtema.'"
+    },
+    {
+      id:"0-2",
+      title:"Delimitar un problema de investigación",
+      tags:["Delimitación","Problema"],
+      objective:"Transformar un tema amplio en una pregunta de investigación acotada, viable y original.",
+      prompt:`Actuá como un director de tesis con 20 años de experiencia ayudando a investigadores a formular problemas de investigación precisos.
+
+CONTEXTO: Soy [describite: estudiante/investigador/docente] en el campo de [tu campo]. Tengo un interés general en [tema amplio] pero necesito acotarlo hasta llegar a una pregunta investigable.
+
+TAREA: Guiame en el proceso de delimitación siguiendo estos pasos:
+  1. Identificá las 3 dimensiones más importantes del tema (teórica, empírica, metodológica)
+  2. Señalá qué se sabe ya con certeza (zona saturada)
+  3. Señalá qué está en debate o sin resolver (zona de oportunidad)
+  4. Proponé 3 preguntas de investigación posibles, de menor a mayor originalidad
+  5. Para cada pregunta indicá: viabilidad, tiempo estimado y tipo de metodología recomendada
+
+FORMATO: Estructura clara con numeración. Terminá con una recomendación explícita de cuál elegirías y por qué.
+
+RESTRICCIÓN: Asumí que tengo acceso a bases de datos académicas estándar pero NO acceso a laboratorios especializados ni grandes muestras. Soy investigador individual.`,
+      example:`Tema amplio: "IA y producción científica"
+
+Dimensiones:
+  1. Teórica: ¿Qué entendemos por 'autoría' cuando una IA participa?
+  2. Empírica: ¿Cómo están respondiendo las revistas científicas en la práctica?
+  3. Metodológica: ¿Cómo medimos el aporte de la IA vs. el del humano?
+
+Zona saturada: Análisis de políticas editoriales generales
+Zona de oportunidad: Diferencias por disciplina y por tipo de revista
+
+Pregunta 1 (menor originalidad): ¿Cuáles son las políticas de las principales revistas sobre el uso de IA?
+Pregunta 2 (media): ¿Cómo difieren estas políticas entre ciencias duras y sociales?
+Pregunta 3 (mayor originalidad): ¿Las políticas restrictivas hacia la IA correlacionan con métricas de impacto de las revistas?`,
+      variant:`Variante rápida — para cuando tenés 10 minutos:
+"Tengo este tema: [X]. En 5 líneas, decime: qué se sabe, qué falta saber, y dame UNA pregunta de investigación concreta y viable que yo, como investigador individual, podría responder en [tiempo disponible]."`,
+      tip:"Si la IA te da preguntas demasiado amplias, respondé: 'Todas son aún demasiado amplias. Acotalas agregando una población específica, un contexto geográfico o un período de tiempo.'"
+    },
+    {
+      id:"0-3",
+      title:"Identificar tensiones y controversias del campo",
+      tags:["Controversias","Estado del arte"],
+      objective:"Encontrar los debates vivos del área para posicionarse con criterio teórico.",
+      prompt:`Actuá como un analista de literatura científica especializado en mapear debates intelectuales.
+
+CONTEXTO: Estoy comenzando a investigar sobre [tema] y necesito entender cuáles son las tensiones conceptuales o empíricas que estructuran el campo actualmente.
+
+TAREA: Identificá las 4 o 5 controversias o debates más relevantes en este campo. Para cada una:
+  → Cuál es la posición A y la posición B (o las múltiples posiciones)
+  → Qué tipo de evidencia usa cada lado
+  → Si hay consenso emergente o el debate sigue abierto
+  → Qué implicaciones tiene para alguien que quiera investigar en esta área
+
+FORMATO: Una sección por controversia, con subtítulo descriptivo. Usá lenguaje accesible pero preciso.
+
+RESTRICCIÓN: Solo controversias genuinas con base empírica, no debates filosóficos abstractos ni posiciones marginales. Indicá si alguna controversia está resuelta en la práctica aunque persista en la teoría.`,
+      example:`TEMA: ¿Está la IA reemplazando a los científicos?
+
+Controversia 1 — "Automatización vs. Augmentation"
+  Posición A: La IA automatiza tareas rutinarias liberando al investigador para el trabajo creativo
+  Posición B: La dependencia de la IA erosiona habilidades críticas del investigador a largo plazo
+  Evidencia A: Estudios de productividad en laboratorios con IA integrada
+  Evidencia B: Casos de errores estadísticos no detectados en papers generados con IA
+  Estado: Debate abierto — evidencia mixta según disciplina`,
+      variant:`Variante — para buscar en Consensus o Elicit:
+"Dame 3 preguntas de búsqueda en inglés, listas para usar en Consensus o Semantic Scholar, que capturen los debates principales sobre [tema]. Formulalas como preguntas cerradas (yes/no) que la herramienta pueda procesar."`,
+      tip:"Este prompt funciona muy bien antes de entrar a Consensus: te da el marco conceptual para interpretar los resultados que encontrés."
+    }
+  ]
+},
+{
+  n:1, label:"Exploración inicial del campo", icon:"🌐",
+  desc:"Panorama general de la literatura — qué se sabe y quién lo dice",
+  color:"#0F6E56", light:"#E1F5EE",
+  tools:"Consensus · Elicit",
+  prompts:[
+    {
+      id:"1-1",
+      title:"Formular preguntas para Consensus",
+      tags:["Consensus","Búsqueda científica"],
+      objective:"Construir preguntas optimizadas para obtener respuestas con base científica en Consensus.",
+      prompt:`Tengo el siguiente tema de investigación: [tu tema].
+
+Necesito buscar evidencia científica en Consensus (una herramienta que procesa preguntas en lenguaje natural y devuelve el nivel de acuerdo entre papers).
+
+TAREA: Generame 5 preguntas de búsqueda para Consensus que:
+  - Estén formuladas en inglés (Consensus funciona mejor en inglés)
+  - Sean preguntas cerradas o que admitan respuesta gradual (no preguntas abiertas amplias)
+  - Cubran diferentes ángulos del tema: causal, comparativo, de prevalencia, de impacto
+  - Sean específicas pero no tan técnicas que no haya papers sobre ellas
+
+FORMATO: Listado numerado. Después de cada pregunta, indicá qué ángulo está explorando y por qué elegiste ese ángulo.`,
+      example:`TEMA: El impacto de la IA en la producción científica
+
+1. "Does AI assistance increase the productivity of scientific researchers?"
+   Ángulo: impacto cuantitativo en productividad — hay muchos papers sobre esto
+   
+2. "Is AI-generated scientific content less reliable than human-generated content?"
+   Ángulo: calidad y confiabilidad — debate muy activo post-ChatGPT
+   
+3. "Do journals that ban AI co-authorship have higher quality standards?"
+   Ángulo: políticas editoriales — emergente, buenos papers en 2023-2024
+   
+4. "Can AI tools replace peer review in scientific publishing?"
+   Ángulo: revisión por pares — controversial, resultados interesantes
+   
+5. "Does AI use in research disproportionately benefit large institutions?"
+   Ángulo: equidad y acceso — menos estudiado, oportunidad de originalidad`,
+      variant:`Variante — para Elicit (extracción de metodología):
+"Tengo este tema: [X]. Formulame 3 preguntas para buscar en Elicit que me permitan extraer: el tipo de metodología más usado, el tamaño muestral promedio de los estudios, y las limitaciones más recurrentes que mencionan los autores."`,
+      tip:"Copiá estas preguntas tal cual en Consensus. Si el resultado muestra 'no hay suficiente evidencia', probá reformular: quitá una palabra específica o ampliá el concepto."
+    },
+    {
+      id:"1-2",
+      title:"Interpretar resultados de búsqueda con IA",
+      tags:["Síntesis","Análisis"],
+      objective:"Usar la IA para darle sentido a los resultados obtenidos en Consensus o Elicit.",
+      prompt:`Acabo de hacer búsquedas en Consensus / Elicit sobre mi tema de investigación y obtuve los siguientes resultados:
+
+[Pegá aquí un resumen o captura de los resultados: qué % de papers apoyan, qué dicen los snippets, qué papers aparecen]
+
+CONTEXTO: Mi tema es [tu tema]. Soy investigador en [tu campo].
+
+TAREA:
+  1. Analizá estos resultados e identificá qué conclusión podría extraerse del nivel de consenso encontrado
+  2. Identificá posibles sesgos en los resultados (¿qué tipo de estudios predominan? ¿qué perspectivas pueden estar ausentes?)
+  3. Señalá qué preguntas adicionales surgen a partir de estos resultados
+  4. Sugerí si este nivel de evidencia justifica continuar con este ángulo de investigación o si conviene pivotar
+
+FORMATO: Análisis en 4 secciones claramente separadas. Sé directo sobre las limitaciones.
+
+RESTRICCIÓN: No asumas que los resultados son definitivos. Tratalos como una primera orientación, no como evidencia concluyente.`,
+      example:`Resultados hipotéticos en Consensus para "Does AI replace scientists?":
+- 67% de papers: No reemplaza, complementa
+- 23% de papers: Reemplaza tareas específicas
+- 10%: Neutral / depende del campo
+
+Análisis:
+1. El consenso emergente indica que el reemplazo total es improbable, pero hay reemplazo parcial de tareas específicas
+2. Sesgo potencial: la mayoría de papers probablemente vienen de investigadores que usan IA y tienen incentivo en presentarla positivamente
+3. Preguntas que surgen: ¿Qué tareas específicas están siendo reemplazadas? ¿Varía por disciplina?
+4. Conclusión: El ángulo 'reemplazo total' está saturado negativamente. Más original: estudiar el reemplazo de tareas específicas`,
+      variant:`Variante — para construir el estado del arte rápido:
+"Con base en estos resultados de búsqueda [pegar resultados], redactame un párrafo de estado del arte de 150 palabras que pueda usar como borrador para mi marco teórico. Usá tiempo presente académico y dejá marcados entre corchetes los lugares donde debo insertar citas reales."`,
+      tip:"Nunca uses directamente el párrafo generado como texto final. Usalo como estructura y reemplazá cada afirmación con la cita real del paper que la respalda."
+    }
+  ]
+},
+{
+  n:2, label:"Búsqueda y recuperación de fuentes", icon:"📚",
+  desc:"Encontrar papers reales y evaluarlos con criterio",
+  color:"#1A9070", light:"#DCEEE8",
+  tools:"Semantic Scholar · Google Scholar · Scopus",
+  prompts:[
+    {
+      id:"2-1",
+      title:"Construir estrategia de búsqueda bibliográfica",
+      tags:["Búsqueda","Palabras clave"],
+      objective:"Generar términos de búsqueda estratégicos en inglés para bases de datos académicas.",
+      prompt:`Actuá como un bibliotecario académico especializado en estrategias de búsqueda avanzada.
+
+CONTEXTO: Voy a buscar literatura científica en Semantic Scholar y Google Scholar sobre el siguiente tema:
+[describí tu tema de investigación en 2-3 oraciones]
+
+TAREA: Desarrollá una estrategia de búsqueda completa que incluya:
+
+  1. TÉRMINOS PRINCIPALES (3-5): los conceptos centrales en inglés
+  2. SINÓNIMOS Y VARIANTES: términos alternativos para cada concepto principal
+  3. OPERADORES BOOLEANOS: 3 combinaciones de búsqueda listas para usar con AND / OR / NOT
+  4. TÉRMINOS A EXCLUIR: qué palabras clave generarían ruido o resultados irrelevantes
+  5. FILTROS RECOMENDADOS: año de publicación, tipo de documento, campo disciplinar
+
+FORMATO: Una sección por punto, con ejemplos listos para copiar y pegar en el buscador.`,
+      example:`TEMA: Impacto de la IA en la producción de conocimiento científico
+
+1. Términos principales:
+   - Artificial intelligence / AI
+   - Scientific research / academic research
+   - Knowledge production / science output
+   - Research automation
+   - Scientific authorship
+
+2. Sinónimos:
+   - AI → machine learning, large language models, LLMs, generative AI
+   - Scientific research → academic publishing, scholarly output, peer-reviewed research
+
+3. Combinaciones listas para usar:
+   → ("artificial intelligence" OR "LLM") AND "scientific research" AND "productivity"
+   → ("AI authorship" OR "AI co-author") AND ("academic publishing" OR "peer review")
+   → "generative AI" AND "research automation" NOT "creative writing"
+
+4. Excluir: "popular science", "science fiction", "AI ethics" (muy general)
+5. Filtros: 2020-2025, Article/Review, Computer Science + Library Science`,
+      variant:`Variante — para encontrar el paper fundacional:
+"Dado este tema [X], ¿cuál sería la búsqueda más específica para encontrar EL paper que inició el debate académico sobre esto? Dame el término de búsqueda y explícame cómo reconocerlo cuando lo vea (características del paper fundacional en este campo)."`,
+      tip:"Una vez que encontrés 2 o 3 papers relevantes en Semantic Scholar, usá la función 'Papers that cited this' para mapear toda la conversación académica posterior."
+    },
+    {
+      id:"2-2",
+      title:"Evaluar la calidad y relevancia de un paper",
+      tags:["Evaluación crítica","Selección"],
+      objective:"Usar criterios académicos para decidir si un paper merece incluirse en la revisión.",
+      prompt:`Actuá como un revisor académico experimentado.
+
+CONTEXTO: Encontré el siguiente paper y necesito evaluar si vale la pena incluirlo en mi revisión de literatura sobre [tu tema].
+
+DATOS DEL PAPER:
+- Título: [título]
+- Autores: [autores]
+- Revista: [revista]
+- Año: [año]
+- Abstract: [pegá el abstract]
+- Citas recibidas: [número si lo tenés]
+
+TAREA: Evaluá este paper en los siguientes criterios y dales una calificación de 1 a 5:
+
+  ☐ Relevancia temática para mi investigación
+  ☐ Solidez metodológica (según lo que se puede inferir del abstract)
+  ☐ Actualidad del enfoque
+  ☐ Impacto en el campo (citas, revista)
+  ☐ Originalidad del aporte
+
+FORMATO: Tabla de evaluación + párrafo de recomendación: "incluir / incluir con reservas / descartar" con justificación.
+
+RESTRICCIÓN: Basate solo en la información proporcionada. Indicá claramente qué no podés evaluar sin leer el texto completo.`,
+      example:`Evaluación del paper "GPT-4 as a Research Assistant: A Systematic Review" (Nature Machine Intelligence, 2024, 847 citas)
+
+| Criterio | Puntaje | Observación |
+|---|---|---|
+| Relevancia | 5/5 | Directamente sobre el tema |
+| Metodología | 4/5 | Revisión sistemática — robusto |
+| Actualidad | 5/5 | 2024, usa últimos modelos |
+| Impacto | 5/5 | 847 citas en un año — muy alto |
+| Originalidad | 3/5 | Marco ya conocido pero bien ejecutado |
+
+Recomendación: INCLUIR — paper de alta relevancia y metodología sólida. Leer especialmente sección de limitaciones.`,
+      variant:`Variante — evaluación rápida de múltiples papers:
+"Tengo estos 5 papers sobre [tema]. Para cada uno, con base en el título y la revista, hacé un ranking de mayor a menor relevancia probable para mi investigación. Solo necesito la jerarquía y una frase de justificación por paper."`,
+      tip:"Si el paper tiene muchas citas pero es antiguo (2015 o antes), buscá si fue refutado o actualizado. Pedile a la IA: 'Hay evidencia de que este paper fue criticado o contradicho en la literatura posterior?'"
+    }
+  ]
+},
+{
+  n:3, label:"Mapeo de literatura + Setup", icon:"🗺️",
+  desc:"Visualizar el campo y organizar las fuentes desde el primer día",
+  color:"#2EA882", light:"#DFF0EA",
+  tools:"Litmaps · Research Rabbit · Zotero · Notion",
+  prompts:[
+    {
+      id:"3-1",
+      title:"Diseñar el sistema de organización bibliográfica",
+      tags:["Organización","Zotero","Notion"],
+      objective:"Crear una estructura de carpetas, etiquetas y notas que escale durante toda la investigación.",
+      prompt:`Actuá como un investigador muy organizado con experiencia en gestión de bibliografía para proyectos de largo plazo.
+
+CONTEXTO: Estoy comenzando un proyecto de investigación sobre [tu tema]. Voy a acumular entre 50 y 200 papers a lo largo de varios meses. Uso Zotero para gestionar referencias y Notion para notas.
+
+TAREA: Diseñame un sistema completo de organización que incluya:
+
+  1. ESTRUCTURA DE COLECCIONES en Zotero (carpetas y subcarpetas)
+  2. SISTEMA DE ETIQUETAS (tags) para clasificar por: relevancia, estado de lectura, tipo de fuente, posición teórica
+  3. PLANTILLA DE NOTA en Notion para cada paper leído
+  4. CRITERIOS de decisión para clasificar un paper como "central", "secundario" o "contexto"
+
+FORMATO: Estructuras listas para implementar. Incluí los nombres exactos de carpetas y etiquetas tal como los escribiría en la herramienta.
+
+RESTRICCIÓN: El sistema debe ser simple de mantener — si requiere más de 2 minutos clasificar un paper, no lo voy a sostener.`,
+      example:`Sistema para investigación sobre IA y producción científica:
+
+ZOTERO — Colecciones:
+  📁 0_Por leer
+  📁 1_Leídos — centrales
+  📁 2_Leídos — secundarios
+  📁 3_Leídos — contexto/background
+  📁 4_Metodología y referencia
+  📁 5_Descartados (con nota de por qué)
+
+ETIQUETAS:
+  Por relevancia: ★★★ / ★★ / ★
+  Por estado: #pendiente / #leído / #anotado
+  Por posición: #pro-IA / #crítico-IA / #neutro
+  Por tipo: #empírico / #teórico / #revisión / #caso-estudio
+
+PLANTILLA NOTION por paper:
+  - Título + autores + año
+  - Pregunta principal que responde
+  - Metodología en 1 línea
+  - Hallazgo central (1 párrafo)
+  - Cita textual más útil (con número de página)
+  - Cómo conecta con mi investigación
+  - Dudas o críticas propias`,
+      variant:`Variante — para un proyecto ya iniciado y caótico:
+"Tengo 40 papers guardados sin organización. Dame un protocolo de 1 hora para poner orden: qué revisar primero, cómo decidir qué queda y qué se descarta, y qué sistema mínimo implementar para que no vuelva a perder el control."`,
+      tip:"Revisá y actualizá las etiquetas cada 15 papers — no al final. Un sistema que no se mantiene es peor que no tener sistema."
+    },
+    {
+      id:"3-2",
+      title:"Describir el mapa del campo para un colega",
+      tags:["Síntesis","Mapa conceptual"],
+      objective:"Generar una descripción estructurada del campo que pueda usarse para armar el marco teórico.",
+      prompt:`Actuá como un investigador que acaba de terminar de leer la bibliografía principal de un campo y va a explicárselo a un colega que empieza.
+
+CONTEXTO: He estado explorando el campo de [tu tema] y quiero consolidar lo que aprendí en un mapa conceptual escrito.
+
+TAREA: Con base en lo que sé hasta ahora sobre el campo (te voy a contar), ayudame a estructurar:
+
+  1. Los 3 o 4 NODOS CONCEPTUALES principales (los grandes temas que estructuran el campo)
+  2. Las CONEXIONES entre esos nodos (cómo se relacionan)
+  3. Los AUTORES O GRUPOS de investigación clave para cada nodo
+  4. Las TENSIONES o debates que generan cada conexión
+  5. Dónde se ubica MI pregunta de investigación en este mapa
+
+LO QUE SÉ HASTA AHORA: [contá lo que sabés — aunque sea poco]
+
+FORMATO: Mapa textual con indentaciones y flechas (→). Luego un párrafo de síntesis de 100 palabras que podría abrir mi introducción.`,
+      example:`Campo: IA y producción científica
+
+NODO 1: Automatización de tareas investigativas
+  → Autores clave: Dwivedi et al., Birhane et al.
+  → Conecta con NODO 2 via: "si la IA puede automatizar, ¿quién es el autor?"
+
+NODO 2: Autoría y responsabilidad académica
+  → Tensión: revistas dicen "no" pero investigadores dicen "sí en la práctica"
+  → Conecta con NODO 3 via: "¿cómo se garantiza la calidad si el humano delega?"
+
+NODO 3: Calidad y confiabilidad del conocimiento generado con IA
+  → Conecta con NODO 4 via: "¿quién verifica?"
+
+NODO 4: Revisión por pares y validación científica
+
+MI PREGUNTA se ubica entre NODO 2 y NODO 3: el espacio donde la autoría se vuelve difusa y la calidad no está garantizada.`,
+      variant:`Variante — para generar el índice del marco teórico:
+"Con base en este mapa de nodos [pegar el mapa], generame un índice tentativo para mi capítulo de marco teórico/revisión de literatura. Cada sección debe tener un subtítulo descriptivo (no genérico como '2.1 Antecedentes') y una indicación de qué tipo de contenido irá allí."`,
+      tip:"Este prompt es más valioso después de haber leído al menos 10 papers. La IA usa lo que vos le contás — a mejor input, mejor output."
+    }
+  ]
+},
+{
+  n:4, label:"Comprensión y análisis de papers", icon:"💬",
+  desc:"Extraer lo que importa de textos complejos de manera eficiente",
+  color:"#26A69A", light:"#DEF0EF",
+  tools:"SciSpace · NotebookLM · Humata AI",
+  prompts:[
+    {
+      id:"4-1",
+      title:"Disección completa de un paper científico",
+      tags:["Análisis","Lectura crítica"],
+      objective:"Extraer todos los elementos relevantes de un paper para su uso en la investigación.",
+      prompt:`Actuá como un investigador metodológico experto en análisis crítico de literatura científica.
+
+Voy a pegarte el abstract (o el texto completo) de un paper. Necesito que lo diseccionés siguiendo esta estructura:
+
+  1. PREGUNTA DE INVESTIGACIÓN: ¿Qué busca responder este paper?
+  2. HIPÓTESIS O SUPUESTOS: ¿Qué asumen o esperan encontrar los autores?
+  3. METODOLOGÍA: Tipo de estudio, muestra, instrumento, análisis estadístico
+  4. HALLAZGOS PRINCIPALES: Los 3 resultados más importantes
+  5. LIMITACIONES EXPLÍCITAS: Lo que los propios autores reconocen como límites
+  6. LIMITACIONES IMPLÍCITAS: Lo que yo identifico como límites no reconocidos
+  7. CONEXIÓN CON MI INVESTIGACIÓN: Cómo aporta o tensiona mi propia pregunta
+  8. CITA MÁS ÚTIL: La frase textual más relevante para mi trabajo (si está en el texto)
+
+TEXTO DEL PAPER: [pegá aquí el abstract o fragmentos]
+
+MI PREGUNTA DE INVESTIGACIÓN es: [tu pregunta]
+
+RESTRICCIÓN: Si algo no puede inferirse del texto proporcionado, indicalo explícitamente con "[no determinable sin texto completo]". No especules más allá de lo que dice el texto.`,
+      example:`Paper analizado: "Large Language Models as Research Partners: Benefits, Risks and Boundaries" (2024)
+
+1. Pregunta: ¿Bajo qué condiciones el uso de LLMs en investigación mejora vs. compromete la calidad científica?
+2. Hipótesis: Los LLMs benefician tareas de baja complejidad cognitiva y perjudican las de alta
+3. Metodología: Revisión sistemática de 78 estudios + encuesta a 340 investigadores de 12 países
+4. Hallazgos:
+   - Los LLMs aumentan productividad en revisión de literatura (+34%)
+   - Pero aumentan errores en interpretación estadística cuando el investigador los delega completamente
+   - El efecto varía significativamente por disciplina (cs. naturales vs. sociales)
+5. Limitaciones explícitas: Sesgo de publicación, muestra auto-seleccionada
+6. Limitaciones implícitas: No controlan por nivel de experticia del investigador
+7. Conexión: Apoya mi argumento de que el reemplazo es tarea-específico, no global
+8. Cita útil: "AI tools function as force multipliers for expert researchers but as substitutes for novice ones"`,
+      variant:`Variante rápida — para decidir si vale la pena leer completo:
+"Leé este abstract: [abstract]. Dame en 3 líneas: qué aporta, qué no dice, y si merece lectura completa para una investigación sobre [tu tema]. Respuesta directa, sin rodeos."`,
+      tip:"Cuando uses SciSpace o NotebookLM para esto, siempre pedí también las limitaciones — es lo que la mayoría olvida preguntar y lo más valioso para posicionar tu propio trabajo."
+    },
+    {
+      id:"4-2",
+      title:"Síntesis comparativa de múltiples papers",
+      tags:["Síntesis","Comparación","NotebookLM"],
+      objective:"Encontrar patrones, acuerdos y contradicciones entre varios papers al mismo tiempo.",
+      prompt:`Actuá como un investigador que está construyendo el estado del arte de su tesis.
+
+CONTEXTO: Leí los siguientes papers sobre [tu tema] y necesito encontrar patrones comunes, contradicciones y vacíos en la literatura.
+
+PAPERS (resumí brevemente cada uno o pegá sus abstracts):
+  - Paper A: [título, año, hallazgo principal]
+  - Paper B: [título, año, hallazgo principal]
+  - Paper C: [título, año, hallazgo principal]
+  [agregá los que necesités]
+
+TAREA:
+  1. ACUERDOS: ¿En qué coinciden estos papers? (puntos de consenso)
+  2. CONTRADICCIONES: ¿Dónde se contradicen? ¿A qué puede deberse la diferencia?
+  3. VACÍOS: ¿Qué ángulo importante no cubre ninguno de estos papers?
+  4. EVOLUCIÓN: ¿Se nota una evolución en el debate entre los papers más antiguos y los más recientes?
+  5. MI POSICIÓN: ¿Dónde podría ubicarse mi investigación para hacer un aporte genuino?
+
+FORMATO: Una sección por punto. En las contradicciones, usá un formato de tabla con columna Paper / Posición / Posible explicación.`,
+      example:`Papers comparados (tema: IA y autoría científica):
+A: Smith et al. 2022 — "La IA no puede ser autora"
+B: Johnson & Lee 2023 — "La IA como co-autora es inevitable"
+C: González et al. 2024 — "Depende del tipo de contribución"
+
+ACUERDOS: Los tres coinciden en que la responsabilidad ética debe recaer en humanos.
+CONTRADICCIONES:
+  A dice "nunca" / B dice "siempre" / C dice "depende"
+  → Posible explicación: A es filosófico, B es pragmático, C es empírico
+VACÍO: Ninguno analiza cómo esta distinción varía por campo disciplinar específico.
+EVOLUCIÓN: Se nota un movimiento de posiciones absolutas (A) hacia matices empíricos (C).
+MI POSICIÓN: Abordar el vacío disciplinar que ninguno cubre.`,
+      variant:`Variante — para usar en NotebookLM:
+"Subí estos 3 papers a NotebookLM y hacé esta pregunta literal: 'What do all three papers agree on? Where do they contradict each other? What question do none of them answer?'"`,
+      tip:"Con NotebookLM podés subir hasta 50 fuentes. Empezá con tus 5 papers más importantes y añadí de a poco — así podés hacer preguntas cruzadas muy específicas."
+    }
+  ]
+},
+{
+  n:5, label:"Diseño del proyecto y escritura", icon:"✍️",
+  desc:"Estructurar la investigación y redactar con asistencia de IA",
+  color:"#534AB7", light:"#EEEDFE",
+  tools:"Claude · ChatGPT · Gemini · QuillBot · Jenni",
+  prompts:[
+    {
+      id:"5-1",
+      title:"Formular hipótesis de investigación",
+      tags:["Hipótesis","Diseño"],
+      objective:"Construir hipótesis precisas, falsables y coherentes con el marco teórico.",
+      prompt:`Actuá como un metodólogo de investigación con experiencia en [tu campo o enfoque: cuantitativo/cualitativo/mixto].
+
+CONTEXTO: Mi pregunta de investigación es: [tu pregunta]
+Mi marco teórico se apoya en: [los autores o corrientes teóricas principales que vas a usar]
+Mi enfoque metodológico es: [cuantitativo / cualitativo / mixto]
+
+TAREA: Ayudame a formular hipótesis de investigación que sean:
+  - Falsables (que puedan ser probadas o refutadas empíricamente)
+  - Coherentes con el enfoque metodológico elegido
+  - Derivadas lógicamente del marco teórico
+  - Específicas en términos de relaciones entre variables (si es cuantitativo)
+  - O formuladas como supuestos analíticos (si es cualitativo)
+
+Propone 3 versiones de hipótesis: una más conservadora, una más ambiciosa, una alternativa.
+
+FORMATO: Para cada hipótesis: enunciado formal + variables involucradas (si aplica) + tipo de evidencia que la apoyaría o refutaría.`,
+      example:`Pregunta: ¿El uso de IA en la redacción de papers aumenta la tasa de aceptación en revistas de alto impacto?
+
+H1 (conservadora): El uso de herramientas de IA para revisión de estilo está positivamente asociado con la tasa de aceptación en revistas Q1.
+  Variables: Uso de IA (sí/no) + Factor de impacto de revista + Tasa de aceptación
+  Evidencia que la apoyaría: Papers con metadatos de herramientas usadas + tasas de aceptación comparadas
+
+H2 (ambiciosa): El uso de IA en todas las fases de la redacción científica predice la aceptación mejor que las credenciales institucionales del autor.
+  Variables: Intensidad de uso de IA + Afiliación institucional + Resultado editorial
+
+H3 (alternativa — cualitativa): Los editores de revistas de alto impacto perciben diferencias cualitativas entre textos con y sin IA, aunque no puedan identificarlas consistentemente.
+  Supuesto: Los juicios editoriales son parcialmente tácitos e inarticulados`,
+      variant:`Variante — para investigación cualitativa:
+"Mi investigación es cualitativa/interpretativa. No tengo hipótesis sino supuestos analíticos. Con base en mi pregunta [X] y mi marco [Y], formulame 3 supuestos analíticos que guíen mi trabajo de campo sin predeterminar los resultados."`,
+      tip:"Si la hipótesis que formulás no puede ser refutada con ningún tipo de evidencia posible, no es una hipótesis — es una afirmación. Pedile a la IA: '¿Qué evidencia refutaría esta hipótesis?'"
+    },
+    {
+      id:"5-2",
+      title:"Redactar el marco teórico sección por sección",
+      tags:["Redacción","Marco teórico"],
+      objective:"Generar borradores de secciones del marco teórico con estructura académica correcta.",
+      prompt:`Actuá como un investigador académico experto en escritura científica en español.
+
+CONTEXTO: Estoy escribiendo el marco teórico de mi [tesis / artículo / proyecto] sobre [tu tema]. La sección que necesito redactar se titula: [nombre de la sección].
+
+MATERIAL QUE TENGO: [describí o pegá los puntos clave que querés incluir, las citas que tenés, los autores que querés mencionar]
+
+TAREA: Redactá un borrador de esta sección de aproximadamente [número] palabras que:
+  - Use voz académica en tercera persona o impersonal según corresponda
+  - Integre las fuentes de manera argumentativa (no solo descriptiva)
+  - Construya un argumento progresivo (de lo general a lo específico)
+  - Deje marcados entre [CITA: autor, año] los lugares donde debo insertar referencias reales
+  - Termine con una oración de transición hacia la próxima sección
+
+RESTRICCIÓN: No inventes citas ni nombres de autores. Donde necesites una referencia que yo no te proporcioné, marcala como [REFERENCIA PENDIENTE: descripción de lo que debería citar aquí].`,
+      example:`Sección: "La automatización de tareas en la investigación científica"
+
+Borrador generado:
+"La incorporación de sistemas de inteligencia artificial en el quehacer científico no representa un fenómeno homogéneo, sino un conjunto diferenciado de intervenciones que afectan de manera desigual las distintas fases del proceso investigativo [CITA: Dwivedi et al., 2023]. En particular, la literatura reciente distingue entre tareas de alta y baja complejidad cognitiva [REFERENCIA PENDIENTE: autor que haga esta distinción explícitamente], señalando que la automatización tiende a ser más eficaz y menos controversial en aquellas rutinarias o repetitivas...
+
+[La sección continúa con este nivel de desarrollo]
+
+Esta distinción resulta central para comprender el debate sobre la autoría académica, que se desarrolla en la sección siguiente."`,
+      variant:`Variante — para mejorar un texto ya escrito:
+"Acá está un párrafo de mi marco teórico: [pegá el párrafo]. Identificá: a) qué afirmaciones necesitan cita y no la tienen, b) qué oraciones son demasiado vagas y necesitan precisión, c) cómo mejoraría el flujo argumentativo. No lo reescribas todavía — solo el diagnóstico."`,
+      tip:"Siempre pedí el borrador con las referencias marcadas. Luego reemplazás cada [CITA] con la referencia real que tenés en Zotero. Nunca usar el texto sin verificar cada afirmación."
+    },
+    {
+      id:"5-3",
+      title:"Superar el bloqueo de escritura",
+      tags:["Escritura","Productividad","Jenni"],
+      objective:"Arrancar a escribir cuando la hoja en blanco parece imposible.",
+      prompt:`Estoy bloqueado/a escribiendo [qué sección: introducción / marco / conclusiones / etc.] de mi investigación sobre [tu tema].
+
+LO QUE SÉ que quiero decir en esta sección (aunque sea caótico):
+[volcá todo lo que tenés en la cabeza, aunque esté desordenado — 5-10 líneas como mínimo]
+
+TAREA: Hacé dos cosas:
+  1. Reorganizá mis ideas en un esquema lógico con 3-5 puntos principales en el orden que deberían aparecer
+  2. Escribí el primer párrafo de la sección usando mis propias ideas
+
+RESTRICCIÓN: Usá el vocabulario y las ideas que yo planteé — no agregues ideas nuevas todavía. Este es mi texto, la IA lo organiza, no lo reemplaza.`,
+      example:`Input caótico del investigador:
+"No sé bien por dónde arrancar, tengo que hablar de cómo la IA cambió todo en investigación, pero también quiero aclarar que no es tan simple, hay que ver por qué algunos dicen que sí y otros que no, y también el tema de si es ético o no..."
+
+Output:
+Esquema:
+1. La IA modificó el proceso investigativo en múltiples dimensiones
+2. Sin embargo, el impacto no es uniforme (matizar)
+3. El debate ético es consecuencia de esta heterogeneidad
+4. Esto justifica la pregunta específica de esta investigación
+
+Primer párrafo:
+"La integración de herramientas de inteligencia artificial en el proceso investigativo ha generado transformaciones de alcance todavía incierto. Si bien existe acuerdo en que estas herramientas modifican significativamente cómo se produce conocimiento científico, la naturaleza de ese impacto dista de ser uniforme..."`,
+      variant:`Variante — para las conclusiones:
+"Terminé mi investigación y encontré esto: [describí tus hallazgos]. Ahora tengo que escribir las conclusiones pero no sé qué tan lejos ir con mis afirmaciones. Ayudame a distinguir entre lo que MIS DATOS justifican concluir vs. lo que es especulación que debería ir como 'líneas futuras de investigación'."`,
+      tip:"El mejor antídoto contra el bloqueo es escribirle a la IA como si le estuvieras hablando a un colega. Nada de lenguaje académico todavía — eso viene después. Primero el contenido, luego el estilo."
+    }
+  ]
+},
+{
+  n:6, label:"Análisis de datos e instrumentos", icon:"📊",
+  desc:"Diseñar instrumentos, analizar datos y elegir la herramienta correcta",
+  color:"#7B5EA7", light:"#F2EEFA",
+  tools:"JASP · Julius AI · SPSS · Atlas.ti",
+  prompts:[
+    {
+      id:"6-1",
+      title:"Diseñar un instrumento de recolección de datos",
+      tags:["Instrumentos","Cuestionario","Entrevista"],
+      objective:"Crear preguntas para encuestas o guías de entrevista alineadas con los objetivos de investigación.",
+      prompt:`Actuá como un experto en diseño de instrumentos de investigación [cuantitativa / cualitativa].
+
+CONTEXTO:
+  - Mi pregunta de investigación: [tu pregunta]
+  - Tipo de instrumento: [encuesta con escala Likert / entrevista semiestructurada / grupo focal / otro]
+  - Población objetivo: [quiénes van a responder]
+  - Objetivo del instrumento: [qué dimensiones quiero medir o explorar]
+
+TAREA: Diseñá el instrumento con las siguientes características:
+  - Para encuesta: 12-15 ítems, agrupados por dimensión, con instrucciones claras
+  - Para entrevista: 8-10 preguntas principales con sub-preguntas de profundización
+  - Incluí una pregunta sociodemográfica inicial y una de cierre abierta
+  - Las preguntas deben estar directamente vinculadas a los objetivos de la investigación
+
+FORMATO: Instrumento listo para usar, con numeración y agrupación por secciones. Al final, incluí una tabla de operacionalización: Variable → Dimensión → Ítem del instrumento.
+
+RESTRICCIÓN: Evitá preguntas dobles, preguntas inductoras y lenguaje técnico que el entrevistado no comprenda. Revisá que no haya sesgo de deseabilidad social.`,
+      example:`Instrumento: Encuesta sobre uso de IA en investigación
+
+SECCIÓN 1 — Perfil (datos sociodemográficos)
+1. Nivel de formación académica: [opciones]
+2. Disciplina de investigación: [opciones]
+3. Años de experiencia investigadora: [rango]
+
+SECCIÓN 2 — Uso de IA
+4. ¿Con qué frecuencia usás herramientas de IA en tu investigación? [Nunca / Raramente / A veces / Frecuentemente / Siempre]
+5. ¿En qué fases de la investigación usás IA? [checkboxes: búsqueda / escritura / análisis / revisión]
+
+[...continúa con más secciones...]
+
+TABLA DE OPERACIONALIZACIÓN:
+Variable: Intensidad de uso de IA
+Dimensión: Frecuencia → Ítem 4
+Dimensión: Etapas → Ítem 5`,
+      variant:`Variante — para revisar un instrumento ya hecho:
+"Tengo este cuestionario: [pegalo]. Identificá: a) ítems que miden lo mismo (redundancia), b) ítems ambiguos que pueden interpretarse de más de una forma, c) ítems que tienen sesgo de respuesta, d) dimensiones importantes de mi variable que no están cubiertas."`,
+      tip:"Después de diseñar el instrumento, pedile a la IA que simule cómo lo respondería alguien con poco interés en la investigación. Eso revela las preguntas que nadie contesta con cuidado."
+    },
+    {
+      id:"6-2",
+      title:"Interpretar resultados estadísticos",
+      tags:["Estadística","Análisis","Julius"],
+      objective:"Comprender e interpretar outputs de análisis estadísticos para usarlos en el informe.",
+      prompt:`Actuá como un estadístico que explica resultados de manera clara a un investigador que no es especialista en estadística.
+
+CONTEXTO: Realicé un análisis estadístico con [SPSS / JASP / R / Julius] y obtuve los siguientes outputs:
+
+[Pegá las tablas, valores, p-values, coeficientes, etc.]
+
+MI INVESTIGACIÓN: [describe brevemente qué estabas midiendo]
+
+TAREA:
+  1. Explicá qué significa cada valor clave en términos sustantivos (no técnicos)
+  2. Indicá si los resultados son estadísticamente significativos y qué implica eso (y qué NO implica)
+  3. Señalá si hay algún resultado anómalo o que merece atención especial
+  4. Sugerí qué análisis complementarios podrían enriquecer la interpretación
+  5. Redactá un párrafo de resultados listo para incluir en mi informe (con los valores correctos)
+
+RESTRICCIÓN: No sobre-interpretes. Distinguí claramente entre lo que los datos muestran y las inferencias que yo como investigador decido hacer. Recordame que correlación no implica causalidad si aplica.`,
+      example:`Output: Regresión lineal. R²=0.43, F(3,186)=47.2, p<.001
+Variable dependiente: Producción científica (nro. de papers/año)
+Predictores: Uso de IA (β=0.38, p<.001), Años de experiencia (β=0.29, p<.001), Institución pública (β=-0.11, p=.08)
+
+Interpretación:
+"El modelo explica el 43% de la varianza en producción científica — un nivel moderado-alto para ciencias sociales. El uso de IA es el predictor más fuerte: por cada unidad de aumento en el índice de uso de IA, la producción científica aumenta 0.38 unidades (controlando las demás variables). La afiliación institucional pública no resultó estadísticamente significativa (p=.08), aunque su tamaño de efecto sugiere que podría ser relevante con una muestra mayor..."`,
+      variant:`Variante — para análisis cualitativo con Atlas.ti:
+"Realicé un análisis temático con Atlas.ti y emergieron estos códigos y frecuencias: [listá los códigos y sus co-ocurrencias]. Ayudame a: identificar qué patrones muestran estos códigos, proponer relaciones entre ellos para construir categorías más amplias, y redactar una descripción interpretativa de los hallazgos."`,
+      tip:"Cuando uses Julius AI para análisis estadístico, pedile siempre que te muestre el código que generó. Así podés verificar que hizo exactamente lo que le pediste y aprendés de paso."
+    }
+  ]
+},
+{
+  n:7, label:"Revisión, estilo y validación", icon:"✅",
+  desc:"Pulir la escritura, verificar originalidad y preparar para publicación",
+  color:"#C0442A", light:"#FAECE7",
+  tools:"Grammarly · QuillBot",
+  prompts:[
+    {
+      id:"7-1",
+      title:"Revisión académica integral de un texto",
+      tags:["Revisión","Estilo académico"],
+      objective:"Obtener feedback estructurado sobre un borrador antes de enviarlo a revisión.",
+      prompt:`Actuá como un revisor académico senior con experiencia en publicaciones en [tu campo].
+
+CONTEXTO: Estoy preparando para publicar / entregar [un artículo / capítulo / tesis] sobre [tu tema]. Adjunto una sección para que la revises.
+
+TEXTO A REVISAR: [pegá el texto]
+
+TAREA: Realizá una revisión en tres niveles:
+
+NIVEL 1 — ARGUMENTATIVO:
+  - ¿El argumento central está claro y bien sostenido?
+  - ¿Hay saltos lógicos o afirmaciones sin evidencia?
+  - ¿La estructura narrativa lleva al lector de manera coherente?
+
+NIVEL 2 — ACADÉMICO:
+  - ¿El tono y registro son apropiados para publicación académica?
+  - ¿Hay imprecisiones conceptuales o uso incorrecto de términos técnicos?
+  - ¿Las citas están integradas argumentativamente (no solo decorativamente)?
+
+NIVEL 3 — ESTILO:
+  - Oraciones demasiado largas o complejas
+  - Repeticiones innecesarias
+  - Palabras de relleno o hedging excesivo
+
+FORMATO: Para cada nivel, listá los problemas encontrados con número de párrafo y sugerencia de mejora. Terminá con una evaluación general (listo para publicar / necesita revisión menor / necesita revisión mayor).`,
+      example:`Revisión nivel 1 — Argumentativo:
+Párrafo 3: Afirmás que "la IA mejora la productividad científica" pero la única evidencia que citás es un estudio de 2019 anterior a ChatGPT. Necesitás fuentes más recientes o aclarar que hablás de un período específico.
+
+Revisión nivel 2 — Académico:
+Párrafo 5: Usás "paradigma" sin definirlo. En este campo el término tiene connotaciones específicas (Kuhn). ¿Es ese el sentido que querés?
+
+Revisión nivel 3 — Estilo:
+Párrafo 7: "en el marco de" → reemplazar por "en". "a los efectos de" → reemplazar por "para".
+
+Evaluación general: NECESITA REVISIÓN MENOR — argumento sólido pero requiere actualizar evidencia y depurar lenguaje.`,
+      variant:`Variante — revisión rápida de resumen / abstract:
+"Revisá este abstract: [pegalo]. Chequéalo contra esta lista: a) ¿está la pregunta de investigación? b) ¿está la metodología? c) ¿están los hallazgos principales? d) ¿está la contribución o implicación? e) ¿tiene el largo correcto para la revista objetivo [nombre de la revista]? Marcá qué falta o sobra."`,
+      tip:"Para revisar tu propio estilo, pedile a la IA que identifique tus 3 'muletillas' de escritura — las frases que repetís sin darte cuenta. Luego hacé búsqueda y reemplazo en todo el documento."
+    },
+    {
+      id:"7-2",
+      title:"Parafrasear sin perder rigor académico",
+      tags:["Paráfrasis","Originalidad","QuillBot"],
+      objective:"Reformular ideas o citas de manera original manteniendo el rigor conceptual.",
+      prompt:`Necesito parafrasear el siguiente fragmento de un paper para incluirlo en mi trabajo sin copiar literalmente, manteniendo la precisión del argumento original.
+
+TEXTO ORIGINAL: [pegá el texto a parafrasear]
+AUTOR/AÑO: [para mantener la atribución correcta]
+
+TAREA:
+  1. Propone 2 versiones de paráfrasis:
+     - Versión A: más cercana al original (reformulación conservadora)
+     - Versión B: más alejada (reformulación libre pero fiel al concepto)
+  2. Señalá qué términos técnicos NO deben cambiarse porque son conceptos específicos del campo
+  3. Verificá que en ambas versiones quede clara la atribución a los autores originales
+
+RESTRICCIÓN: No simplificar en exceso — la paráfrasis debe mantener la complejidad conceptual del original. Si hay matices que no se pueden parafrasear sin perderlos, indicalo.`,
+      example:`Original: "The automation of cognitive tasks by AI systems challenges the traditional conception of scientific authorship, which has historically been predicated on intentional human agency" (Smith & Pérez, 2023, p. 14)
+
+Versión A (conservadora):
+Smith y Pérez (2023) argumentan que la automatización cognitiva mediada por IA pone en cuestión la noción tradicional de autoría científica, históricamente fundada en la agencia humana intencional.
+
+Versión B (libre):
+La participación de sistemas de IA en tareas cognitivas complejas erosiona los fundamentos sobre los que se ha construido el concepto de autoría en ciencia, entendida clásicamente como un acto deliberado y humano (Smith & Pérez, 2023).
+
+Términos a no cambiar: "intentional human agency" → es un concepto filosófico específico que debe mantenerse o explicarse, no simplificarse.`,
+      variant:`Variante — para detectar qué párrafos propios suenan demasiado a las fuentes:
+"Leé estos dos textos: [tu párrafo] y [el original que consultaste]. ¿Hay alguna frase en mi texto que sea demasiado similar a la fuente? ¿Dónde necesito parafrasear mejor o agregar comillas y cita directa?"`,
+      tip:"QuillBot free tiene límite de 125 palabras. Para textos más largos, dividís el fragmento y los procesás de a partes. Siempre revisá que la versión final tenga sentido como unidad."
+    }
+  ]
+},
+{
+  n:8, label:"Publicación y proyección", icon:"🚀",
+  desc:"Buscar revistas, simular revisión por pares y comunicar la investigación",
+  color:"#D4861A", light:"#FEF3DC",
+  tools:"Claude · ChatGPT · Gamma · LinkedIn",
+  prompts:[
+    {
+      id:"8-1",
+      title:"Buscar la revista adecuada para publicar",
+      tags:["Publicación","Revistas","Journal"],
+      objective:"Identificar revistas académicas pertinentes según el tema, metodología y nivel de impacto.",
+      prompt:`Actuá como un editor académico con conocimiento amplio de las principales revistas científicas en [tu campo].
+
+CONTEXTO DE MI INVESTIGACIÓN:
+  - Tema: [tu tema]
+  - Metodología: [cuantitativa / cualitativa / revisión / etc.]
+  - Hallazgo central: [1-2 oraciones]
+  - Audiencia objetivo: [investigadores del campo / profesionales / política pública / etc.]
+  - Idioma del artículo: [español / inglés / bilingüe]
+
+TAREA: Identificá 5 revistas donde podría publicar este trabajo, ordenadas de mayor a menor adecuación:
+
+Para cada revista indicá:
+  → Nombre y URL oficial
+  → Factor de impacto aproximado o cuartil (Q1-Q4 en Scopus/WoS)
+  → Por qué es adecuada para este trabajo específico
+  → Tiempo promedio de revisión
+  → Si tiene acceso abierto o es de pago
+  → Una advertencia honesta: ¿por qué podría rechazarlo?
+
+RESTRICCIÓN: Priorizá revistas que realmente publican trabajos sobre este tema específico, no solo del área general. Si no conocés una revista con certeza, indicalo — no inventes datos bibliométricos.`,
+      example:`Para artículo sobre: IA y autoría en publicaciones científicas (revisión sistemática, idioma inglés)
+
+1. Scientometrics (Springer) — Q1, IF ~3.8
+   Por qué: Especializada en medición y sociología de la ciencia — tema exacto
+   Revisión: 2-3 meses | Acceso abierto opcional (pago)
+   Advertencia: Exige rigor cuantitativo alto — revisión sistemática sin análisis bibliométrico puede ser rechazada
+
+2. Journal of the Association for Information Science and Technology (JASIST) — Q1
+   Por qué: Publica sobre tecnología e información científica
+   Revisión: 3-4 meses | Acceso tradicional
+   Advertencia: Audiencia anglosajona — las referencias deben ser mayoritariamente en inglés
+
+[...tres revistas más con el mismo formato]`,
+      variant:`Variante — para revistas en español o latinoamericanas:
+"Necesito publicar en una revista indexada en Scopus o Latindex que publique en español sobre [tema]. Identificá 4 opciones con sus criterios de evaluación y requisitos de formato específicos."`,
+      tip:"Antes de enviar, descargá las normas de la revista y verificá: longitud máxima, estilo de citas, número de autores, y si hay costos de procesamiento (APC). Muchas revistas Q1 cobran entre $1.000 y $3.000 USD por artículo."
+    },
+    {
+      id:"8-2",
+      title:"Simular revisión por pares",
+      tags:["Peer review","Revisión","Publicación"],
+      objective:"Anticipar las críticas de un revisor académico antes de enviar el artículo.",
+      prompt:`Actuá como un revisor académico anónimo, crítico pero constructivo, para una revista de [tu campo] indexada en [Scopus / WoS / JSTOR / etc.].
+
+CONTEXTO: Recibiste este artículo para revisar. Tu tarea es emitir un dictamen similar al que haría un revisor real.
+
+ABSTRACT / RESUMEN DEL ARTÍCULO: [pegá el abstract o un resumen]
+SECCIÓN QUE QUERÉS REVISAR: [pegá el texto]
+
+TAREA: Emitir un dictamen de revisión estructurado:
+
+  EVALUACIÓN GENERAL: Aceptar / Revisar mayor / Revisar menor / Rechazar
+  
+  FORTALEZAS (mínimo 3):
+  
+  DEBILIDADES CRÍTICAS (que impedirían publicación):
+  
+  SUGERENCIAS DE MEJORA (ordenadas por importancia):
+  
+  PREGUNTAS AL AUTOR:
+
+RESTRICCIÓN: Sé honesto y específico. Las críticas vagas no ayudan. Indicá número de sección o párrafo cuando hagas una observación. Evitá comentarios sobre el idioma o la forma si el argumento es lo que importa.`,
+      example:`Dictamen simulado para artículo sobre "IA y productividad investigadora":
+
+EVALUACIÓN GENERAL: Revisar Mayor
+
+FORTALEZAS:
+1. Revisión bibliográfica exhaustiva y actualizada
+2. Pregunta de investigación clara y original
+3. Metodología mixta bien justificada
+
+DEBILIDADES CRÍTICAS:
+1. Sección 3.2: La operacionalización de "uso de IA" es demasiado amplia — agrupa herramientas con funciones muy distintas (buscadores, LLMs, herramientas estadísticas). Esto compromete la validez del constructo.
+2. Conclusión: Se concluye causalidad ("la IA causa mayor productividad") cuando el diseño solo permite afirmar correlación.
+
+PREGUNTAS AL AUTOR:
+- ¿Cómo se controla el sesgo de auto-reporte en el cuestionario?
+- ¿Por qué no se incluyeron investigadores de países de bajo ingreso?`,
+      variant:`Variante — para el abstract específicamente:
+"Simulá el dictamen de un revisor de [nombre de revista específica] solo para este abstract: [abstract]. ¿Lo aceptaría para revisión completa o lo rechazaría en la primera lectura? ¿Qué cambiaría para que pase el primer filtro editorial?"`,
+      tip:"Hacé esta simulación ANTES de enviarlo a la revista real. Las críticas de la IA no son perfectas, pero identifican los puntos débiles obvios que un revisor humano también verá."
+    },
+    {
+      id:"8-3",
+      title:"Comunicar la investigación en redes académicas",
+      tags:["Divulgación","LinkedIn","Comunicación"],
+      objective:"Transformar resultados técnicos en contenido accesible para audiencias profesionales.",
+      prompt:`Actuá como un comunicador de ciencia especializado en divulgación para audiencias académicas y profesionales.
+
+CONTEXTO: Acabo de publicar / terminar una investigación sobre [tu tema]. Quiero comunicar los resultados en [LinkedIn / X / presentación / resumen ejecutivo].
+
+HALLAZGO CENTRAL: [describirlo en 2-3 oraciones técnicas]
+AUDIENCIA DEL POST: [investigadores / docentes / tomadores de decisión / profesionales del sector]
+TONO: [formal / conversacional / divulgativo]
+EXTENSIÓN: [post de LinkedIn ~300 palabras / hilo de X / resumen de 1 página]
+
+TAREA: Redactá el contenido para esta audiencia que:
+  - Abra con un dato o afirmación que genere curiosidad inmediata
+  - Explique el hallazgo sin jerga técnica innecesaria
+  - Conecte con un problema real que la audiencia reconozca
+  - Invite a la conversación o a leer el trabajo completo
+  - Incluya entre 3 y 5 hashtags relevantes
+
+RESTRICCIÓN: No oversimplificar al punto de perder precisión. Si un matiz importante no cabe en el formato, mejor aclararlo que omitirlo.`,
+      example:`Post de LinkedIn para investigación sobre IA y productividad científica:
+
+"Pasé 2 años estudiando si la IA realmente hace a los investigadores más productivos. La respuesta es: depende — y de manera que no esperaba.
+
+Los investigadores que usan IA en búsqueda bibliográfica publican un 34% más. Pero los que la usan para interpretar datos estadísticos cometen el doble de errores que no detectan.
+
+La diferencia no está en la herramienta. Está en qué tipo de tarea le delegás.
+
+Si te interesa ver los datos completos, el artículo está en [enlace]. Y si investigás con IA, me gustaría saber: ¿en qué fase la usás más?
+
+#InvestigaciónAcadémica #InteligenciaArtificial #CienciaAbierta #PublicaciónCientífica #MethodsInResearch"`,
+      variant:`Variante — para preparar la presentación en un congreso:
+"Tengo que presentar esta investigación en 15 minutos ante un congreso de [tu campo]. Mi investigación es: [describila]. Diseñame la estructura de la presentación: cuántas diapositivas, qué va en cada una, y cuál es el 'gancho' de apertura y el mensaje de cierre que quiero que el público recuerde."`,
+      tip:"Para LinkedIn, publicar los resultados como 'dato sorprendente' genera más engagement que publicar el abstract directamente. La gente comparte lo que la sorprende o la incomoda, no los resúmenes técnicos."
+    }
+  ]
+}
+];
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+const nav      = document.getElementById('stageNav');
+const container= document.getElementById('stagesContainer');
+
+stages.forEach((stage, si) => {
+  // Nav button
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.textContent = `${stage.n}. ${stage.icon} ${stage.label.split(':')[0]}`;
+  btn.style.setProperty('--stage-color', stage.color);
+  btn.style.setProperty('--stage-light', stage.light);
+  btn.addEventListener('click', () => {
+    document.getElementById(`stage-${stage.n}`).scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+  nav.appendChild(btn);
+
+  // Section
+  const sec = document.createElement('div');
+  sec.className = 'stage-section';
+  sec.id = `stage-${stage.n}`;
+  sec.style.setProperty('--stage-color', stage.color);
+  sec.style.setProperty('--stage-light', stage.light);
+
+  sec.innerHTML = `
+    <div class="stage-heading">
+      <div class="stage-num">${stage.n}</div>
+      <div class="stage-info">
+        <div class="stage-label">${stage.icon} ${stage.label}</div>
+        <div class="stage-desc">${stage.desc}</div>
+      </div>
+      <div class="stage-tools-tag">🛠 ${stage.tools}</div>
+    </div>`;
+
+  stage.prompts.forEach((p, pi) => {
+    const card = document.createElement('div');
+    card.className = 'prompt-card';
+    card.style.setProperty('--stage-color', stage.color);
+    card.style.setProperty('--stage-light', stage.light);
+
+    const tagsHTML = p.tags.map(t =>
+      `<span class="prompt-tag">${t}</span>`).join('');
+
+    // Escape for display
+    const esc = (s) => s
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+
+    // Colorize prompt tokens for display
+    const colorize = (text) => {
+      return esc(text)
+        .replace(/(Actuá como[^\.]+\.)/g, '<span class="tok-key">$1</span>')
+        .replace(/(CONTEXTO:|TAREA:|FORMATO:|RESTRICCIÓN:|ÁREA DE INTERÉS:|DATOS DEL PAPER:|TEXTO A REVISAR:|TEXTO DEL PAPER:|MATERIAL QUE TENGO:|HALLAZGO CENTRAL:|AUDIENCIA DEL POST:|LO QUE SÉ[^:]*:)/g,
+          '<span class="tok-acc">$1</span>')
+        .replace(/(\[.*?\])/g, '<span class="tok-str">$1</span>')
+        .replace(/(→)/g, '<span class="tok-dim">$1</span>');
+    };
+
+    card.innerHTML = `
+      <div class="prompt-card-header">
+        <span class="prompt-number">P${stage.n}.${pi+1}</span>
+        <span class="prompt-title">${p.title}</span>
+        <div class="prompt-tags">${tagsHTML}</div>
+        <span class="prompt-chevron">▾</span>
+      </div>
+      <div class="prompt-body">
+        <div class="prompt-objective">
+          <span>🎯</span>
+          <span>${p.objective}</span>
+        </div>
+
+        <div class="code-block">
+          <div class="code-toolbar">
+            <span class="code-label">Prompt — copiar y adaptar</span>
+            <button class="copy-btn" onclick="copyPrompt(this, \`${p.prompt.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)">
+              📋 Copiar prompt
+            </button>
+          </div>
+          <div class="code-content">${colorize(p.prompt)}</div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">💡 Ejemplo aplicado al tema conductor</div>
+          <div class="example-text">${esc(p.example)}</div>
+        </div>
+
+        <div class="variant-block">
+          <div class="variant-label">🔄 Variante</div>
+          <div class="variant-text">${esc(p.variant)}</div>
+        </div>
+
+        <div class="tip-row">
+          <span class="tip-icon">⚡</span>
+          <span>${esc(p.tip)}</span>
+        </div>
+      </div>`;
+
+    card.querySelector('.prompt-card-header').addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+
+    sec.appendChild(card);
+  });
+
+  container.appendChild(sec);
+});
+
+// Active nav highlight on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      nav.querySelectorAll('.nav-btn').forEach((b,i) => {
+        b.classList.toggle('active', `stage-${i}` === id);
+        if (`stage-${i}` === id) b.style.background = stages[i].color;
+        else b.style.background = '';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.stage-section').forEach(s => observer.observe(s));
+
+// Copy to clipboard
+function copyPrompt(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copiar prompt';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => { btn.textContent = '📋 Copiar prompt'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
