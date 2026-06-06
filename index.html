@@ -344,6 +344,16 @@
     font-size: 1.05rem;
     font-weight: 700;
     color: var(--step-color);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .detail-tool-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 6px;
   }
   .detail-close {
     background: none;
@@ -603,7 +613,7 @@ Para cada uno indicá:
 → Nivel de consenso o discrepancia
 → Una pregunta de investigación concreta` }
         ]},
-      { name: "DeepSeek",       url: "deepseek.com",      icon: "🤖",    logo: "img/Deepseek.jpeg", free: true,
+      { name: "DeepSeek",       url: "deepseek.com",      icon: "🤖",    logo: "img/DeepSeek.jpeg", free: true,
         limits: [
           "Acceso gratuito vía web y app sin registro requerido",
           "Posibles colas o lentitud en horas pico",
@@ -674,7 +684,7 @@ lower quality than human-generated research?` },
           { label: "Ángulo autoría", text: `Should AI be listed as co-author
 in scientific publications?` }
         ]},
-      { name: "Elicit",     url: "elicit.com",  icon: "🔬",   logo: "img/elicit.png", free: true,
+      { name: "Elicit",     url: "elicit.com",  icon: "🔬",   logo: "img/Elicit.png", free: true,
         limits: [
           "5 búsquedas por mes en plan gratuito",
           "Hasta 4 columnas de extracción de datos por búsqueda",
@@ -819,7 +829,7 @@ investigá qué encontraron diferente.` }
 4. Hacé clic en Grow map para expandir
 5. Exportá la lista para Zotero` }
         ]},
-      { name: "Research Rabbit",  url: "researchrabbit.ai",    icon: "🐇", logo: "img/researchrabbit.jpg", free: true,
+      { name: "Research Rabbit",  url: "researchrabbit.ai",    icon: "🐇", logo: "img/researchrabbit.png", free: true,
         limits: [
           "✅ Completamente gratuito — financiado por donaciones",
           "Colecciones ilimitadas de papers",
@@ -1101,7 +1111,7 @@ Usá mi vocabulario, no el tuyo.` }
           "Límite de mensajes por hora en uso intensivo"
         ]
       },
-      { name: "DeepSeek",    url: "deepseek.com",    icon: "🤖", logo: "img/Deepseek.jpeg", free: true,
+      { name: "DeepSeek",    url: "deepseek.com",    icon: "🤖", logo: "img/DeepSeek.png", free: true,
         limits: [
           "Acceso gratuito vía web sin registro",
           "Posibles colas en horas pico",
@@ -1497,7 +1507,28 @@ function buildPanel(panel, tool, stage, limitsHTML, warningHTML) {
   var nameEl = document.createElement('div');
   nameEl.className = 'detail-tool-name';
   nameEl.style.color = color;
-  nameEl.textContent = tool.icon + ' ' + tool.name;
+  if (tool.logo) {
+    var logoImg = document.createElement('img');
+    logoImg.src = tool.logo;
+    logoImg.alt = tool.name + ' logo';
+    logoImg.className = 'detail-tool-logo';
+    logoImg.onerror = function() {
+      this.style.display = 'none';
+      var fb = document.createElement('span');
+      fb.textContent = tool.icon;
+      fb.style.fontSize = '1.6rem';
+      nameEl.insertBefore(fb, nameEl.firstChild);
+    };
+    nameEl.appendChild(logoImg);
+  } else {
+    var iconFb = document.createElement('span');
+    iconFb.textContent = tool.icon;
+    iconFb.style.fontSize = '1.6rem';
+    nameEl.appendChild(iconFb);
+  }
+  var toolNameSpan = document.createElement('span');
+  toolNameSpan.textContent = tool.name;
+  nameEl.appendChild(toolNameSpan);
 
   var closeBtn = document.createElement('button');
   closeBtn.className = 'detail-close';
