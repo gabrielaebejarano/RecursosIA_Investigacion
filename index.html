@@ -496,6 +496,20 @@
     .site-header h1 { font-size: 1.6rem; }
     .container { padding: 1.5rem 1rem 2rem; }
   }
+
+  .detail-tabs{display:flex;gap:0;margin-bottom:1rem;border-bottom:2px solid #E5E7EB}
+  .detail-tab{padding:.45rem 1.1rem;font-size:.82rem;font-weight:600;border:none;background:none;cursor:pointer;color:#6B7280;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;font-family:inherit}
+  .detail-tab.active{color:var(--tab-color,#0F6E56);border-bottom-color:var(--tab-color,#0F6E56)}
+  .detail-tab:hover:not(.active){color:#374151}
+  .tab-pane{display:none}
+  .tab-pane.active{display:block}
+  .prompt-block{margin-bottom:.85rem}
+  .prompt-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tab-color,#0F6E56);margin-bottom:.4rem}
+  .prompt-code{background:#1E2433;border-radius:.6rem;padding:.85rem 1rem;font-family:'Courier New',monospace;font-size:.75rem;line-height:1.65;color:#E8EBF4;white-space:pre-wrap;word-break:break-word;position:relative}
+  .copy-prompt-btn{position:absolute;top:.5rem;right:.5rem;background:rgba(255,255,255,.08);border:none;cursor:pointer;color:rgba(255,255,255,.5);font-size:.68rem;padding:.2rem .5rem;border-radius:.3rem;transition:background .15s,color .15s;font-family:inherit}
+  .copy-prompt-btn:hover{background:rgba(255,255,255,.18);color:#fff}
+  .prompt-tip{font-size:.78rem;color:#555;margin-top:.6rem;padding:.5rem .75rem;background:#F4F4F2;border-radius:.4rem;border-left:3px solid var(--tab-color,#0F6E56)}
+  .prompt-tip b{color:var(--tab-color,#0F6E56)}
 </style>
 </head>
 <body>
@@ -565,15 +579,52 @@ const stages = [
           "Sin análisis de archivos ni generación de imágenes en free",
           "Historial de conversaciones limitado"
         ]
-      },
-      { name: "DeepSeek",       url: "deepseek.com",      icon: "🤖",    logo: "img/DeepSeek.jpeg", free: true,
+      ,
+        purpose: "Explorá el panorama del tema antes de comprometerte con una pregunta.",
+        tip: "Activá el modo Academic para priorizar fuentes académicas. Son punto de partida, no fuente citable.",
+        prompts: [
+          { label: "Exploración inicial", text: `Estoy comenzando a investigar si la IA está
+reemplazando a los investigadores científicos.
+
+Dame un panorama de los debates más activos
+en la literatura académica reciente:
+- ¿Cuáles son los subtemas más discutidos?
+- ¿Qué disciplinas están más involucradas?
+- ¿Qué preguntas siguen sin respuesta?
+
+Incluí fuentes académicas cuando sea posible.` },
+          { label: "Acotar subtemas", text: `Dentro del debate sobre IA y producción
+científica, ¿cuáles son los 4-5 subtemas
+que generan más publicaciones en los
+últimos 2 años?
+
+Para cada uno indicá:
+→ Por qué genera debate ahora
+→ Nivel de consenso o discrepancia
+→ Una pregunta de investigación concreta` }
+        ]},
+      { name: "DeepSeek",       url: "deepseek.com",      icon: "🤖",    logo: "img/Deepseek.jpeg", free: true,
         limits: [
           "Acceso gratuito vía web y app sin registro requerido",
           "Posibles colas o lentitud en horas pico",
           "API: $5 USD de crédito gratis, luego pago por tokens",
           "Sin funciones avanzadas de DeepSeek-R2 completo"
         ]
-      },
+      ,
+        purpose: "Razonamiento profundo para acotar temas complejos y formular preguntas.",
+        tip: "DeepSeek es especialmente bueno para razonamiento paso a paso. Pedile que explicite cada paso de su lógica.",
+        prompts: [
+          { label: "Delimitación del problema", text: `Tengo un tema amplio: si la IA reemplaza
+a los investigadores científicos.
+
+Ayudame a delimitarlo:
+1. ¿Qué se sabe ya con certeza?
+2. ¿Qué está en debate? (zona de oportunidad)
+3. Proponé 3 preguntas de investigación
+   de menor a mayor originalidad
+4. Para cada una: viabilidad y metodología
+   recomendada` }
+        ]},
       { name: "Gemini",         url: "gemini.google.com",  icon: "🧠",  logo: "img/gemini.png", free: true,
         limits: [
           "Gemini 2.0 Flash disponible gratis",
@@ -581,7 +632,19 @@ const stages = [
           "Límite de mensajes por hora en uso intensivo",
           "Extensiones con Google Workspace limitadas en free"
         ]
-      },
+      ,
+        purpose: "Exploración de ideas con comprensión de contexto amplio.",
+        tip: "Gemini tiene acceso a fuentes recientes de Google. Pedile siempre que cite los papers que menciona.",
+        prompts: [
+          { label: "Mapa de tensiones del campo", text: `Identificá las 4-5 tensiones del debate
+sobre si la IA reemplaza a los científicos.
+
+Para cada tensión:
+→ Posición A y posición B
+→ Tipo de evidencia de cada lado
+→ Si hay consenso emergente o debate abierto
+→ Implicación para quien quiera investigar aquí` }
+        ]},
     ]
   },
   {
@@ -598,7 +661,19 @@ const stages = [
           "Sin exportación de resultados",
           "Premium: ~$9.99/mes o $99/año"
         ]
-      },
+      ,
+        purpose: "Saber qué % de la ciencia apoya o contradice una idea. Preguntas cerradas en inglés.",
+        tip: "Un concepto por pregunta. Observá el Consensus Meter: ¿hay acuerdo, debate, o evidencia mixta?",
+        prompts: [
+          { label: "Consenso central", text: `Does AI replace human researchers
+in scientific work?` },
+          { label: "Ángulo productividad", text: `Does artificial intelligence increase
+scientific research productivity?` },
+          { label: "Ángulo calidad", text: `Does AI-generated scientific content have
+lower quality than human-generated research?` },
+          { label: "Ángulo autoría", text: `Should AI be listed as co-author
+in scientific publications?` }
+        ]},
       { name: "Elicit",     url: "elicit.com",  icon: "🔬",   logo: "img/elicit.png", free: true,
         limits: [
           "5 búsquedas por mes en plan gratuito",
@@ -607,7 +682,21 @@ const stages = [
           "Sin exportación CSV/Excel en plan free",
           "Plus: ~$12/mes"
         ]
-      },
+      ,
+        purpose: "Extrae datos estructurados de papers cuando ya tenés un tema identificado.",
+        tip: "Úsalo después de Consensus: ya sabés que el tema existe, ahora profundizás en datos metodológicos.",
+        prompts: [
+          { label: "Extracción estructurada", text: `Find studies on AI tools replacing or
+augmenting tasks performed by scientific
+researchers.
+
+Extract for each study:
+- Type of study (empirical/review/theoretical)
+- AI tool or system studied
+- Research task being automated
+- Key finding
+- Main limitation acknowledged by authors` }
+        ]},
     ]
   },
   {
@@ -623,7 +712,16 @@ const stages = [
           "Sin funciones premium — todo el contenido es libre",
           "Alertas de nuevos papers: gratuitas con registro"
         ]
-      },
+      ,
+        purpose: "Búsqueda semántica + impacto + redes de citas. Completamente gratuito.",
+        tip: "Una vez encontrés el paper más citado, usá Papers that cited this para mapear toda la conversación posterior.",
+        prompts: [
+          { label: "Búsqueda 1 — concepto central", text: `AI replacement scientific researchers` },
+          { label: "Búsqueda 2 — automatización", text: `artificial intelligence automation
+research tasks academic publishing` },
+          { label: "Búsqueda 3 — autoría", text: `AI co-authorship scientific papers ethics` },
+          { label: "Búsqueda 4 — calidad", text: `LLM generated research quality peer review` }
+        ]},
       { name: "Scopus",           url: "scopus.com",           logo: "img/scopus.svg", icon: "📚", free: false,
         limits: [
           "❌ NO tiene plan gratuito individual",
@@ -633,7 +731,17 @@ const stages = [
           "Alternativa free: Semantic Scholar o Google Scholar"
         ],
         warning: "Requiere acceso institucional. Consultá si tu universidad tiene suscripción."
-      },
+      ,
+        purpose: "Base indexada para revisiones sistemáticas. Requiere acceso institucional.",
+        tip: "Exportá los resultados en BibTeX para importar directo a Zotero. Usá filtros de año y tipo de documento.",
+        prompts: [
+          { label: "Estrategia booleana", text: `TITLE-ABS-KEY("artificial intelligence"
+AND "scientific research"
+AND ("authorship" OR "automation"
+OR "replacement"))
+AND PUBYEAR > 2020
+AND DOCTYPE(ar OR re)` }
+        ]},
       { name: "Google Scholar",   url: "scholar.google.com",   logo: "img/Google_Scholar.png", icon: "🎓", free: true,
         limits: [
           "✅ Completamente gratuito — sin planes de pago",
@@ -642,7 +750,24 @@ const stages = [
           "Alertas de citas y nuevos papers: gratuitas",
           "Acceso al texto completo depende del editor"
         ]
-      },
+      ,
+        purpose: "Búsqueda amplia y gratuita. Útil para rastrear citas y autores clave.",
+        tip: "Activá alertas de Google Scholar para búsquedas clave — te avisa cuando aparece un nuevo paper.",
+        prompts: [
+          { label: "Búsqueda con operadores", text: `"artificial intelligence" "replaces
+scientists" after:2021
+
+→ Buscá el perfil del autor relevante
+→ Ordená sus papers por citas
+→ Activá alerta para nuevos papers
+  sobre tu tema` },
+          { label: "Rastrear un autor", text: `Una vez identificás un autor clave:
+1. Buscá su perfil en Google Scholar
+2. Ordená sus papers por citas
+3. Activá Seguir a este autor
+4. Configurá alerta de búsqueda
+   para recibir notificaciones` }
+        ]},
       { name: "Scite",            url: "scite.ai",       icon: "✅",        logo: "img/Scite.svg", free: false,
         limits: [
           "❌ Trial: 7 días gratuitos con tarjeta de crédito requerida",
@@ -652,7 +777,20 @@ const stages = [
           "Institucional: precio variable"
         ],
         warning: "Requiere tarjeta de crédito incluso para el trial. Herramienta de referencia para proyectos avanzados."
-      },
+      ,
+        purpose: "Verificá si tus fuentes están respaldadas, contradichas o solo mencionadas.",
+        tip: "Combiná con Semantic Scholar: encontrás el paper allá, lo verificás acá. Requiere tarjeta para el trial.",
+        prompts: [
+          { label: "Verificación de fuente clave", text: `[Pegá el DOI o título exacto del paper]
+
+Revisá:
+→ Supporting citations: ¿cuántas?
+→ Contrasting citations: ¿cuántas?
+→ ¿Las contrasting son recientes?
+
+Si hay muchas contrasting recientes,
+investigá qué encontraron diferente.` }
+        ]},
     ]
   },
   {
@@ -669,8 +807,19 @@ const stages = [
           "Sin exportación en alta resolución",
           "Pro: ~$10/mes o $8/mes anual"
         ]
-      },
-      { name: "Research Rabbit",  url: "researchrabbit.ai",    icon: "🐇", logo: "img/researchrabbit.png", free: true,
+      ,
+        purpose: "Visualizá la evolución del campo en el tiempo y encontrá el paper fundacional.",
+        tip: "Los nodos más grandes y oscuros son los más influyentes. Priorizalos para tu lectura.",
+        prompts: [
+          { label: "Flujo de uso", text: `1. Buscá tu tema: AI scientific authorship
+2. Seleccioná el paper más citado como semilla
+3. En el grafo temporal observá:
+   → ¿Hay un pico de publicaciones reciente?
+   → ¿Qué papers están en el origen?
+4. Hacé clic en Grow map para expandir
+5. Exportá la lista para Zotero` }
+        ]},
+      { name: "Research Rabbit",  url: "researchrabbit.ai",    icon: "🐇", logo: "img/researchrabbit.jpg", free: true,
         limits: [
           "✅ Completamente gratuito — financiado por donaciones",
           "Colecciones ilimitadas de papers",
@@ -678,7 +827,18 @@ const stages = [
           "Integración con Zotero gratuita",
           "No tiene plan de pago — 100% free"
         ]
-      },
+      ,
+        purpose: "Descubrí papers y redes de autores desde tu colección. 100% gratuito.",
+        tip: "Con 3-5 papers de entrada el grafo ya es muy informativo. No necesitás añadir todo antes de explorar.",
+        prompts: [
+          { label: "Construcción de colección", text: `1. Creá colección: IA y científicos
+2. Añadí 3-5 papers ya identificados
+3. Explorá:
+   → Similar papers para nuevos candidatos
+   → Who else publishes on this? para
+     mapear investigadores centrales
+4. Conectá con Zotero para sincronizar` }
+        ]},
       { name: "Connected Papers", url: "connectedpapers.com",  icon: "🕸️", logo: "img/connectedpaper.png", free: true,
         limits: [
           "5 grafos por mes en plan gratuito",
@@ -687,7 +847,19 @@ const stages = [
           "Academic: gratuito con email institucional (ilimitado)",
           "Pro: ~$3/mes"
         ]
-      },
+      ,
+        purpose: "Grafo visual de similitud entre papers. Ver cómo se conecta el campo.",
+        tip: "El paper semilla define la dirección del grafo. Si no muestra lo esperado, probá con otro paper.",
+        prompts: [
+          { label: "Desde el paper semilla", text: `1. Encontrá en Semantic Scholar el paper
+   más citado sobre AI authorship
+2. Copiá el título en Connected Papers
+3. En el grafo observá:
+   → Nodos grandes = más influyentes
+   → Clusters = subcampos del tema
+   → Periferia = papers emergentes
+4. Explorá Prior works para antecedentes` }
+        ]},
       { name: "Zotero",           url: "zotero.org",            icon: "📂", logo: "img/Zotero.png", free: true,
         limits: [
           "300 MB de almacenamiento en nube gratuito",
@@ -696,7 +868,22 @@ const stages = [
           "Almacenamiento adicional: 2 GB/$20 año, 6 GB/$60 año",
           "Grupos de colaboración: gratuitos con 300 MB compartidos"
         ]
-      },
+      ,
+        purpose: "Organizá todas las fuentes y formateá citas automáticamente en cualquier estilo.",
+        tip: "Instalá el conector de navegador hoy mismo — guardás cualquier paper en Zotero con un clic.",
+        prompts: [
+          { label: "Estructura de colecciones", text: `Colecciones recomendadas:
+📁 0_Por leer
+📁 1_Centrales (leídos y relevantes)
+📁 2_Secundarios (contexto)
+📁 3_Metodología de referencia
+📁 4_Descartados (con nota)
+
+Etiquetas:
+#pro-IA  #crítico-IA  #neutro
+#empírico  #teórico  #revisión
+#pendiente  #leído  #anotado` }
+        ]},
       { name: "Mendeley",         url: "mendeley.com",          icon: "📎", logo: "img/mendeley.png", free: true,
         limits: [
           "2 GB de almacenamiento personal gratuito",
@@ -706,7 +893,18 @@ const stages = [
           "⚠️ Elsevier redujo funciones tras adquisición — se recomienda Zotero"
         ],
         warning: "Desde la adquisición por Elsevier, Mendeley redujo funciones. Zotero sigue siendo la opción más completa y libre."
-      },
+      ,
+        purpose: "Gestor bibliográfico con lector de PDF integrado. 2 GB gratuitos.",
+        tip: "Zotero sigue siendo la opción más completa y libre. Mendeley redujo funciones desde la adquisición por Elsevier.",
+        prompts: [
+          { label: "Nota de lectura estructurada", text: `Para cada paper leído, registrá:
+→ Pregunta principal que responde
+→ Metodología en 1 línea
+→ Hallazgo central (1 párrafo)
+→ Cita textual más útil + página
+→ Cómo conecta con mi investigación
+→ Dudas o críticas propias` }
+        ]},
       { name: "Notion",           url: "notion.com",            icon: "📋", logo: "img/notion.png", free: true,
         limits: [
           "Bloques ilimitados para uso individual (desde nov 2022)",
@@ -715,7 +913,23 @@ const stages = [
           "Subida de archivos: máximo 5 MB por archivo",
           "Notion AI: 20 respuestas gratis, luego $10/mes"
         ]
-      },
+      ,
+        purpose: "Base de conocimiento central: artículos, notas, borradores, todo junto.",
+        tip: "Notion para pensar y organizar. Zotero para PDFs y citas. No mezcles sus roles.",
+        prompts: [
+          { label: "Estructura de workspace", text: `Páginas recomendadas:
+📋 Base de papers (tabla con filtros)
+📝 Diario de investigación
+📚 Marco teórico en construcción
+🗂 Por capítulo/sección
+
+Por cada paper (vista tabla):
+- Título + autor + año
+- Etapa del proceso
+- Relevancia (1-3 estrellas)
+- Nota de 3 líneas
+- Estado de lectura` }
+        ]},
     ]
   },
   {
@@ -732,7 +946,26 @@ const stages = [
           "Sin acceso a SciSpace Copilot completo",
           "Premium: ~$12/mes"
         ]
-      },
+      ,
+        purpose: "Preguntale directamente al PDF. 20 preguntas/día en plan gratuito.",
+        tip: "Reservá las preguntas para lo complejo. Lo que podés leer en el abstract, leélo directamente.",
+        prompts: [
+          { label: "Secuencia de 5 preguntas", text: `1. ¿Cuál es la pregunta de investigación
+   principal de este paper?
+
+2. ¿Qué metodología usaron y cuál fue
+   el tamaño de la muestra o corpus?
+
+3. ¿Cuáles son los 3 hallazgos más
+   importantes?
+
+4. ¿Qué limitaciones reconocen
+   explícitamente los autores?
+
+5. ¿Qué posición toma este paper sobre
+   si la IA reemplaza o complementa
+   a los investigadores?` }
+        ]},
       { name: "NotebookLM",  url: "notebooklm.google.com",  icon: "📝", logo: "img/notebooklm.png", free: true,
         limits: [
           "Hasta 50 fuentes por notebook (PDFs, docs, URLs, texto)",
@@ -741,7 +974,31 @@ const stages = [
           "50 chats por día por notebook",
           "Plus (Google One AI Premium $19.99/mes): sin límites"
         ]
-      },
+      ,
+        purpose: "Subí hasta 50 fuentes y hacé preguntas que cruzan todos los documentos.",
+        tip: "Especificá siempre en todos los documentos subidos para preguntas de síntesis.",
+        prompts: [
+          { label: "Síntesis comparativa", text: `Con base en todos los documentos subidos
+sobre IA y producción científica:
+
+¿En qué puntos coinciden estos autores?
+¿En qué se contradicen explícitamente?
+¿Qué pregunta importante no responde
+ninguno de estos papers?` },
+          { label: "Mapa de posiciones", text: `¿Qué autor del corpus plantea la posición
+más crítica hacia la idea de que la IA
+reemplaza a los científicos?
+
+¿Cuál es su argumento central y qué
+evidencia usa para sostenerlo?` },
+          { label: "Estado del arte en borrador", text: `Redactá un párrafo de estado del arte
+de 150 palabras sobre el debate
+IA vs investigadores humanos.
+
+Dejá marcados [CITA: autor, año] los
+lugares donde insertar referencias.
+No inventes citas.` }
+        ]},
       { name: "Humata AI",   url: "humata.ai",              icon: "📝", logo: "img/humata.jpg", free: true,
         limits: [
           "60 páginas de PDF por mes en plan gratuito",
@@ -750,7 +1007,18 @@ const stages = [
           "Sin exportación de respuestas",
           "Pro: ~$14.99/mes (ilimitado)"
         ]
-      },
+      ,
+        purpose: "Preguntas sobre PDFs subidos. 60 páginas/mes en plan gratuito.",
+        tip: "Ideal para documentos institucionales o informes de política. Para síntesis multi-documento, NotebookLM es mejor.",
+        prompts: [
+          { label: "Lectura rápida eficiente", text: `Resumí este paper en 5 puntos clave
+ordenados por importancia.
+
+Luego decime:
+→ ¿Cuáles tienen respaldo cuantitativo?
+→ ¿Cuáles son afirmaciones cualitativas?
+→ ¿Hay alguna contradicción interna?` }
+        ]},
     ]
   },
   {
@@ -767,7 +1035,38 @@ const stages = [
           "Sin subida de archivos ilimitada",
           "Pro: $20/mes — sin límites en Sonnet, acceso a Opus"
         ]
-      },
+      ,
+        purpose: "Diseño del proyecto, hipótesis y redacción con estructura académica.",
+        tip: "Asignale siempre un ROL concreto antes de pedir. Actuá como metodólogo/revisor cambia la calidad de la respuesta.",
+        prompts: [
+          { label: "Hipótesis de investigación", text: `Actuá como metodólogo experto en
+[tu campo].
+
+Mi pregunta: ¿Está la IA reemplazando
+a los investigadores científicos?
+Mi enfoque: [cuantitativo/cualitativo]
+
+Formulame 3 hipótesis:
+- H1: conservadora
+- H2: ambiciosa
+- H3: alternativa
+
+Para cada una: enunciado + variables +
+tipo de evidencia que la apoyaría.` },
+          { label: "Borrador de marco teórico", text: `Actuá como investigador experto en
+escritura científica en español.
+
+Redactá un borrador de 200 palabras
+para la sección [nombre de sección]
+usando estas ideas: [tus ideas]
+
+Formato:
+- Voz académica impersonal
+- Referencias: [CITA: autor, año]
+- Oración de cierre
+
+RESTRICCIÓN: No inventes citas.` }
+        ]},
       { name: "ChatGPT",     url: "chatgpt.com",     icon: "💬", logo: "img/ChatGPT.svg", free: true,
         limits: [
           "GPT-4o con límite de mensajes (aprox. 10-15 por 3 horas en pico)",
@@ -776,7 +1075,25 @@ const stages = [
           "Sin memoria persistente en algunos países",
           "Plus: $20/mes — límites ampliados y acceso prioritario"
         ]
-      },
+      ,
+        purpose: "Asistente versátil para diseño, escritura y análisis con GPT-4o.",
+        tip: "El mejor antídoto contra el bloqueo es escribirle a la IA como si le hablaras a un colega. Lenguaje académico viene después.",
+        prompts: [
+          { label: "Superar el bloqueo de escritura", text: `Estoy bloqueado/a escribiendo la
+introducción de mi artículo sobre si
+la IA reemplaza a los científicos.
+
+Lo que quiero decir (de forma caótica):
+[escribí todo lo que tenés en la cabeza]
+
+1. Reorganizá mis ideas en 4-5 puntos
+   en orden lógico
+2. Escribí el primer párrafo usando
+   SOLO mis ideas
+
+RESTRICCIÓN: No agregues ideas nuevas.
+Usá mi vocabulario, no el tuyo.` }
+        ]},
       { name: "Gemini",      url: "gemini.google.com", icon: "🧠", logo: "img/gemini.png", free: true,
         limits: [
           "Gemini 2.0 Flash disponible gratis",
@@ -784,7 +1101,7 @@ const stages = [
           "Límite de mensajes por hora en uso intensivo"
         ]
       },
-      { name: "DeepSeek",    url: "deepseek.com",    icon: "🤖", logo: "img/DeepSeek.png", free: true,
+      { name: "DeepSeek",    url: "deepseek.com",    icon: "🤖", logo: "img/Deepseek.jpeg", free: true,
         limits: [
           "Acceso gratuito vía web sin registro",
           "Posibles colas en horas pico",
@@ -800,7 +1117,22 @@ const stages = [
           "Sin detector de plagio en free",
           "Premium: ~$8.33/mes (anual)"
         ]
-      },
+      ,
+        purpose: "Paráfrasis y mejora de estilo académico. 125 palabras por vez en free.",
+        tip: "El modo Formal conserva mejor la precisión técnica. El modo Creative puede distorsionar argumentos científicos.",
+        prompts: [
+          { label: "Flujo correcto de paráfrasis", text: `MODO: Formal o Academic (NO Standard)
+
+1. Leé y entendé el fragmento original
+2. Pegalo en QuillBot → modo Formal
+3. Comparás original y paráfrasis
+4. Ajustás lo que perdió precisión
+5. Agregás la cita bibliográfica
+
+[Parafrasear NO elimina la atribución]
+[LÍMITE FREE: 125 palabras — dividir
+ textos largos por párrafos]` }
+        ]},
       { name: "Jenni AI",    url: "jenni.ai",        icon: "📝", logo: "img/Jenni.svg", free: true,
         limits: [
           "200 palabras por día generadas con IA en free",
@@ -809,7 +1141,23 @@ const stages = [
           "Sin integración con Zotero/Mendeley en free",
           "Plus: ~$20/mes (ilimitado)"
         ]
-      },
+      ,
+        purpose: "Asistente de escritura académica con autocompletado. 200 palabras/día en plan free.",
+        tip: "Conecta con Zotero para insertar citas mientras escribís. En el plan free, usá las 200 palabras para los párrafos más difíciles.",
+        prompts: [
+          { label: "Arrancar a escribir", text: `Tengo que escribir la sección
+[nombre de tu sección] sobre si la IA
+reemplaza a los investigadores.
+
+Mis ideas (de forma caótica):
+[escribí lo que tenés]
+
+Jenni: completá la primera oración
+de cada párrafo y ayudame a mantener
+el hilo argumental.
+
+Usa lenguaje académico en español.` }
+        ]},
     ]
   },
   {
@@ -827,7 +1175,27 @@ const stages = [
           "Alternativa gratuita: JASP, R o Python"
         ],
         warning: "Consultá si tu institución tiene licencia antes de pagar. JASP es una excelente alternativa gratuita."
-      },
+      ,
+        purpose: "Análisis estadístico avanzado. Requiere licencia institucional.",
+        tip: "Consultá si tu institución tiene licencia antes de pagar. JASP es una alternativa gratuita muy completa.",
+        prompts: [
+          { label: "Interpretar output con IA", text: `Actuá como estadístico que explica
+resultados a un investigador sin
+especialización estadística.
+
+Realicé este análisis en SPSS:
+[Pegá aquí las tablas de resultados]
+
+1. Explicá cada valor en términos
+   sustantivos (no técnicos)
+2. ¿Son estadísticamente significativos?
+   ¿Qué implica y qué NO implica?
+3. ¿Hay algún resultado anómalo?
+4. Redactá el párrafo de resultados
+
+RESTRICCIÓN: Distinguí correlación
+de causalidad.` }
+        ]},
       { name: "JASP",        url: "jasp-stats.org",  icon: "📈", logo: "img/jasp.jpg", free: true,
         limits: [
           "✅ Completamente gratuito y de código abierto",
@@ -836,7 +1204,29 @@ const stages = [
           "Requiere descarga e instalación local",
           "Sin versión cloud — solo desktop"
         ]
-      },
+      ,
+        purpose: "Análisis estadístico gratuito y de código abierto. Interfaz similar a SPSS.",
+        tip: "Completamente gratuito. La interfaz gráfica es muy similar a SPSS — curva de aprendizaje baja.",
+        prompts: [
+          { label: "Interpretar output con IA", text: `Actuá como estadístico que explica
+resultados a un investigador sin
+especialización.
+
+Realicé este análisis en JASP:
+[Pegá los resultados: R², F, p-values,
+coeficientes β, etc.]
+
+Variable dependiente: [lo que mediste]
+
+1. Explicá cada valor en términos
+   sustantivos
+2. ¿Qué implica la significancia?
+3. ¿Hay resultados anómalos?
+4. Redactá el párrafo de resultados
+
+RESTRICCIÓN: Recordame si estoy
+sobreinterpretando.` }
+        ]},
       { name: "Atlas.ti",    url: "atlasti.com",     icon: "🔍", logo: "img/atlas.png", free: false,
         limits: [
           "❌ Trial gratuito: solo 5 días con funciones completas",
@@ -846,7 +1236,20 @@ const stages = [
           "Alternativa: MAXQDA (trial extendido para estudiantes)"
         ],
         warning: "Si tenés email universitario, el plan student es la opción más accesible (~$99/año)."
-      },
+      ,
+        purpose: "Análisis cualitativo de datos textuales, entrevistas y observaciones.",
+        tip: "Si tenés email universitario, el plan student (~$99/año) es la opción más accesible.",
+        prompts: [
+          { label: "Análisis temático con IA", text: `Realicé un análisis temático en Atlas.ti
+y emergieron estos códigos:
+[listá los códigos con sus co-ocurrencias]
+
+Ayudame a:
+1. Identificar patrones entre los códigos
+2. Proponer categorías más amplias
+3. Redactá una descripción interpretativa
+   de los hallazgos principales` }
+        ]},
       { name: "Julius AI",   url: "julius.ai",       icon: "🤖", logo: "img/julius.jpeg", free: true,
         limits: [
           "15 mensajes por día en plan gratuito",
@@ -855,7 +1258,22 @@ const stages = [
           "Sin exportación de código generado en free",
           "Pro: ~$20/mes"
         ]
-      },
+      ,
+        purpose: "Análisis de datos con IA — subí CSV/Excel y obtené estadísticas. 15 mensajes/día free.",
+        tip: "Pedile siempre que te muestre el código generado. Verificás que hizo lo que pediste y aprendés de paso.",
+        prompts: [
+          { label: "Análisis exploratorio de encuesta", text: `[Subí el archivo CSV con tus datos]
+
+Realizá un análisis exploratorio:
+1. Estadísticos descriptivos de todas
+   las variables
+2. Distribución para ítems Likert
+3. Correlación entre dimensiones
+4. Ítems con mayor varianza
+5. Graficá las 5 preguntas más relevantes
+
+Mostrá el código de cada paso.` }
+        ]},
     ]
   },
   {
@@ -872,7 +1290,27 @@ const stages = [
           "GrammarlyGO (IA generativa): 100 prompts/mes gratis",
           "Premium: ~$12/mes (anual) — estilo académico completo"
         ]
-      },
+      ,
+        purpose: "Corrección de gramática y estilo en inglés. Último filtro antes de enviar.",
+        tip: "Usalo como penúltima revisión, no la única. Está optimizado para inglés — para español el rendimiento cae.",
+        prompts: [
+          { label: "Configuración para textos académicos", text: `Antes de pegar el texto en Grammarly:
+
+Settings → Goals:
+  ✓ Audience: Expert
+  ✓ Formality: Formal
+  ✓ Domain: Academic
+
+Al revisar:
+  ✓ Aceptar: gramática y ortografía
+  ✓ Revisar: estilo y claridad
+  ✗ Ignorar: términos técnicos
+    disciplinares específicos
+
+GrammarlyGO (100 prompts/mes free):
+Improve academic clarity without
+changing the technical meaning` }
+        ]},
       { name: "QuillBot",    url: "quillbot.com",    icon: "✒️" , logo: "img/quillbot.png", free: true,
         limits: [
           "Paráfrasis: máximo 125 palabras por vez en plan free",
@@ -899,7 +1337,29 @@ const stages = [
           "Sin acceso a temas premium",
           "Plus: ~$8/mes (créditos mensuales y sin marca de agua)"
         ]
-      },
+      ,
+        purpose: "Presentaciones visuales con IA. 400 créditos al registrarse (~10 presentaciones).",
+        tip: "Genera una base sólida en segundos. Editás el contenido después. Marca de agua en free — para congresos formales necesitás Plus.",
+        prompts: [
+          { label: "Presentación del trabajo", text: `Creá una presentación académica
+de 10 diapositivas sobre:
+
+¿Está la IA reemplazando a los
+científicos? [tu subtítulo]
+
+Estructura:
+1. Pregunta provocadora de apertura
+2. Estado del debate en la literatura
+3. Vacío que mi investigación llena
+4. Metodología (visual, no texto)
+5-7. Hallazgos principales
+8. Implicaciones para el campo
+9. Conclusión en 3 puntos
+10. Referencias + QR al artículo
+
+Estilo: académico pero visual, fondo claro,
+poco texto por slide.` }
+        ]},
       { name: "Claude",      url: "claude.ai",       icon: "🧠", logo: "img/Claude.svg", free: true,
         limits: [
           "Prompts para buscar revistas: funciona en plan free",
@@ -1006,18 +1466,8 @@ stages.forEach((stage, si) => {
           ? `<div class="detail-warning">⚠️ <span>${tool.warning}</span></div>`
           : '';
 
-        panel.innerHTML = `
-          <div class="detail-header">
-            <div class="detail-tool-name" style="color:${stage.color}">${tool.icon} ${tool.name}</div>
-            <button class="detail-close" onclick="this.closest('.detail-panel').remove();
-              document.querySelectorAll('.tool-card').forEach(c=>c.classList.remove('active'))">✕</button>
-          </div>
-          <div class="detail-section-title">Límites del plan gratuito</div>
-          <ul class="limit-list">${limitsHTML}</ul>
-          ${warningHTML}
-          <a class="detail-link" href="https://${tool.url}" target="_blank" rel="noopener">
-            Visitar ${tool.url} ↗
-          </a>`;
+        // Build panel using DOM methods to avoid quote/template conflicts
+        buildPanel(panel, tool, stage, limitsHTML, warningHTML);
 
         panelContainer.appendChild(panel);
 
@@ -1035,6 +1485,152 @@ stages.forEach((stage, si) => {
   stageEl.appendChild(panelContainer);
   main.appendChild(stageEl);
 });
+
+function buildPanel(panel, tool, stage, limitsHTML, warningHTML) {
+  var color = stage.color;
+  var hasTabs = !!(tool.prompts && tool.prompts.length > 0);
+
+  // Header
+  var header = document.createElement('div');
+  header.className = 'detail-header';
+
+  var nameEl = document.createElement('div');
+  nameEl.className = 'detail-tool-name';
+  nameEl.style.color = color;
+  nameEl.textContent = tool.icon + ' ' + tool.name;
+
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'detail-close';
+  closeBtn.textContent = '✕';
+  closeBtn.addEventListener('click', function() {
+    panel.remove();
+    document.querySelectorAll('.tool-card').forEach(function(c) { c.classList.remove('active'); });
+  });
+
+  header.appendChild(nameEl);
+  header.appendChild(closeBtn);
+  panel.appendChild(header);
+
+  if (hasTabs) {
+    // Tab bar
+    var tabBar = document.createElement('div');
+    tabBar.className = 'detail-tabs';
+    tabBar.style.setProperty('--tab-color', color);
+
+    var tabFree = document.createElement('button');
+    tabFree.className = 'detail-tab active';
+    tabFree.textContent = 'Plan gratuito';
+    tabFree.addEventListener('click', function() { switchTab(this, 'free'); });
+
+    var tabPrompts = document.createElement('button');
+    tabPrompts.className = 'detail-tab';
+    tabPrompts.textContent = 'Cómo usarla';
+    tabPrompts.addEventListener('click', function() { switchTab(this, 'prompts'); });
+
+    tabBar.appendChild(tabFree);
+    tabBar.appendChild(tabPrompts);
+    panel.appendChild(tabBar);
+
+    // Free plan pane
+    var freePane = document.createElement('div');
+    freePane.className = 'tab-pane active';
+    freePane.dataset.tab = 'free';
+    freePane.innerHTML = '<div class="detail-section-title">Límites del plan gratuito</div>'
+      + '<ul class="limit-list">' + limitsHTML + '</ul>'
+      + warningHTML
+      + '<a class="detail-link" href="https://' + tool.url + '" target="_blank" rel="noopener">Visitar ' + tool.url + ' ↗</a>';
+    panel.appendChild(freePane);
+
+    // Prompts pane
+    var promptsPane = document.createElement('div');
+    promptsPane.className = 'tab-pane';
+    promptsPane.dataset.tab = 'prompts';
+    promptsPane.style.setProperty('--tab-color', color);
+
+    if (tool.purpose) {
+      var purposeEl = document.createElement('p');
+      purposeEl.style.cssText = 'font-size:.82rem;color:#555;margin-bottom:.9rem;padding:.5rem .7rem;'
+        + 'background:#F4F4F2;border-radius:.4rem;border-left:3px solid ' + color;
+      purposeEl.textContent = tool.purpose;
+      promptsPane.appendChild(purposeEl);
+    }
+
+    tool.prompts.forEach(function(p, pi) {
+      var block = document.createElement('div');
+      block.className = 'prompt-block';
+
+      var labelEl = document.createElement('div');
+      labelEl.className = 'prompt-label';
+      labelEl.textContent = p.label;
+
+      var codeEl = document.createElement('div');
+      codeEl.className = 'prompt-code';
+      codeEl.dataset.raw = p.text;
+
+      var copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-prompt-btn';
+      copyBtn.textContent = 'Copiar';
+      copyBtn.addEventListener('click', function() {
+        var raw = codeEl.dataset.raw;
+        navigator.clipboard.writeText(raw).then(function() {
+          copyBtn.textContent = '✓ Copiado';
+          setTimeout(function() { copyBtn.textContent = 'Copiar'; }, 1800);
+        }).catch(function() {
+          copyBtn.textContent = '✓ Copiado';
+          setTimeout(function() { copyBtn.textContent = 'Copiar'; }, 1800);
+        });
+      });
+
+      var codeText = document.createTextNode(p.text);
+      codeEl.appendChild(copyBtn);
+      codeEl.appendChild(codeText);
+
+      block.appendChild(labelEl);
+      block.appendChild(codeEl);
+      promptsPane.appendChild(block);
+    });
+
+    if (tool.tip) {
+      var tipEl = document.createElement('div');
+      tipEl.className = 'prompt-tip';
+      tipEl.innerHTML = '<b>Tip:</b> ' + tool.tip;
+      promptsPane.appendChild(tipEl);
+    }
+
+    panel.appendChild(promptsPane);
+
+  } else {
+    // No tabs — just limits
+    var limitsDiv = document.createElement('div');
+    limitsDiv.innerHTML = '<div class="detail-section-title">Límites del plan gratuito</div>'
+      + '<ul class="limit-list">' + limitsHTML + '</ul>'
+      + warningHTML
+      + '<a class="detail-link" href="https://' + tool.url + '" target="_blank" rel="noopener">Visitar ' + tool.url + ' ↗</a>';
+    panel.appendChild(limitsDiv);
+  }
+}
+
+
+function copyPromptById(id, btn) {
+  const el = document.getElementById(id);
+  const text = el ? el.dataset.raw : '';
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓ Copiado';
+    setTimeout(function(){ btn.textContent = 'Copiar'; }, 1800);
+  }).catch(function() {
+    btn.textContent = '✓ Copiado';
+    setTimeout(function(){ btn.textContent = 'Copiar'; }, 1800);
+  });
+}
+
+function switchTab(btn, tabName) {
+  const panel = btn.closest('.detail-panel');
+  panel.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const pane = panel.querySelector('[data-tab="' + tabName + '"]');
+  if (pane) pane.classList.add('active');
+}
 </script>
 </body>
 </html>
